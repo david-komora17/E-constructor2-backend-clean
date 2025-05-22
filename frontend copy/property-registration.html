@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Property – E-constructor</title>
+  <link rel="stylesheet" href="e-constructor2.css">
+</head>
+<body>
+  <header>
+    <h1>E-constructor</h1>
+  </header>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="make-entries.html">Make Entries</a></li>
+      <li><a href="details.html">View Property Details</a></li>
+      <li><a href="other.html">Other</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <form id="propertyForm" enctype="multipart/form-data" class="entry-form">
+      <h2>Register Property</h2>
+
+      <label for="postalAddress"><strong>Postal Address of the Property</strong></label>
+      <input type="text" name="postalAddress" id="postalAddress" placeholder="Postal Address" required>
+
+      <label for="lrNumber"><strong>LR Number</strong></label>
+      <input type="text" name="lrNumber" id="lrNumber" placeholder="LR Number" required>
+
+      <label for="ownerID"><strong>Owner ID/License Number</strong></label>
+      <input type="text" name="ownerID" id="ownerID" placeholder="Owner ID/license number" required>
+
+      <label for="pin"><strong>Set Your E-constructor Pin</strong></label>
+      <input type="password" name="pin" id="pin" placeholder="Set Pin" required>
+
+      <label for="phone"><strong>Valid Phone Number</strong></label>
+      <input type="tel" name="phone" id="phone" placeholder="Phone" required>
+
+      <label for="purpose"><strong>Select the Purpose of Construction</strong></label>
+      <input type="text" name="purpose" id="purpose" placeholder="Rent or Sale" required>
+
+      <label for="paybill"><strong>Valid Paybill for Rent Collection</strong></label>
+      <input type="text" name="paybill" id="paybill" placeholder="Paybill & Account" required>
+
+      <label for="documents"><strong>Submit Valid Building Permit</strong></label>
+      <input type="file" name="documents" id="documents" multiple>
+
+      <button type="submit">Submit Form</button>
+    </form>
+  </main>
+  
+  <script>
+    // Simulate fetching number of floors from Nairobi County Permit System
+    async function fetchBuildingFloorsFromPermitSystem(lrNumber) {
+      // Simulated delay and response
+      return new Promise((resolve) => {
+        setTimeout(() => {
+            "LR12345": 5,
+            "LR54321":8,
+            "LR67890": 12
+          };
+          resolve(mockFloors[lrNumber] || 6); // default to 6 floors
+        }, 1000);
+      });
+    }
+
+    document.getElementById('lrNumber').addEventListener('blur', async function () {
+      const lr = this.value.trim().toUpperCase();
+      if (lr) {
+        const floors = await fetchBuildingFloorsFromPermitSystem(lr);
+        document.getElementById('floors').value = floors;
+        document.getElementById('estimatedTime').textContent = 
+          `Estimated Completion Time: ${floors} month(s) (1 month per floor)`;
+      }
+    });
+  </script>
+</body>
+</html>
+
+ 

@@ -1,0 +1,35 @@
+<!-- frontend/pay.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>E-constructor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="e-constructor2.css">
+</head>
+<body>
+  <h2>Make a Payment</h2>
+  <form id="mpesaForm">
+    <input type="tel" id="phone" placeholder="Enter Phone (2547...)" required /><br /><br />
+    <input type="number" id="amount" placeholder="Amount" required /><br /><br />
+    <button type="submit">Pay Now</button>
+  </form>
+
+  <script>
+    document.getElementById("mpesaForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("phone").value;
+      const amount = document.getElementById("amount").value;
+
+      const response = await fetch("http://localhost:5000/api/mpesa/stkpush", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, amount }),
+      });
+
+      const result = await response.json();
+      alert("M-Pesa response: " + JSON.stringify(result));
+    });
+  </script>
+</body>
+</html>

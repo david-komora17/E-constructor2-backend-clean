@@ -1,0 +1,63 @@
+<!-- details.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Property Details - E-constructor</title>
+  <link rel="stylesheet" href="e-constructor2.css">
+  <style>
+    header, .navbar {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+    .navbar {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar li {
+      margin: 0 15px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .navbar a:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>E-constructor</h1>
+  </header>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="make-entries.html">Make Entries</a></li>
+      <li><a href="details.html">View Property Details</a></li>
+      <li><a href="other.html">Other</a></li>
+    </ul>
+  </nav>
+  <main>
+    <h2>View Property Details</h2>
+    <label for="search-method">Search property:</label>
+    <input type="string" placeholder="Enter search value...">
+    <input type="number" placeholder="county number...">
+    <button>Search</button>
+  </main>
+</body>
+</html>

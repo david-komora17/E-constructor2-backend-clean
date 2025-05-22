@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-constructor</title>
+    <link rel="stylesheet" href="e-constructor2.css">
+</head>
+<body>
+<!-- Leasing Agreement -->
+<section id="lease-upload" class="entry-form">
+  <h3>Upload Leasing Terms and conditions</h3>
+  <form id="leaseForm">
+    
+    <label for="building-lr">Building LR Number</label><br>
+    <input type="text" id="building-lr" required /><br><br>
+
+    <label for="occupancy-cert">Occupancy Certificate</label><br>
+    <input type="file" id="occupancy-cert" accept=".pdf" required /><br><br>
+
+    <label for="lease-agreement">Leasing Agreement</label><br>
+    <input type="file" id="lease-agreement" accept=".pdf" required /><br><br>
+ 
+    <label for="tenant-id">Tenant Name or ID</label><br>
+    <input type="text" id="tenant-id" placeholder="Tenant Name or ID" required /><br><br>
+
+    <label for="tenant-phone">Tenant Phone Number (for SMS)</label><br>
+    <input type="tel" id="tenant-phone" placeholder="+2547XXXXXXXX" required /><br><br>
+
+    <label for="monthly-rent">Monthly Rent Amount</label><br>
+    <input type="number" id="monthly-rent" placeholder="Monthly Rent Amount" required /><br><br>
+
+    <label for="service-charges">Service Charges</label><br>
+    <input type="string" id="service-charges" placeholder="" required /><br><br>
+
+    <label for="lease-start">Lease Start Date</label><br>
+    <input type="date" id="lease-start" required /><br><br>
+
+    <button type="submit">Submit lease Info</button>
+  </form>
+</section>
+
+<!-- Tenant Eviction -->
+<section id="tenant-eviction" class="entry-form">
+  <h3>Tenant Eviction</h3>
+  <form id="evictionForm">
+    <label for="evict-tenant-id">Tenant Name or ID</label><br>
+    <input type="text" id="evict-tenant-id" placeholder="Tenant Name or ID" required /><br><br>
+
+    <label for="evict-address">Property Address (with location details)</label><br>
+    <input type="text" id="evict-address" placeholder="e.g. 1234 Riverside Drive, Nairobi" required /><br><br>
+
+    <label for="evict-charges">Eviction Charges</label><br>
+    <input type="text" id="evict-charges" placeholder="e.g. KES 5,000" required /><br><br>
+
+    <label for="magistrate-name">Magistrate Name</label><br>
+    <input type="text" id="magistrate-name" required /><br><br>
+
+    <label for="jsc-id">JSC Identifier</label><br>
+    <input type="text" id="jsc-id" required /><br><br>
+
+    <label for="evict-start-date">Eviction Due Date</label><br>
+    <input type="date" id="evict-start-date" required /><br><br>
+
+    <button type="submit">Initiate Eviction</button>
+  </form>
+</section>
+<script>
+  document.getElementById("evictionForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+  
+    const address = document.getElementById("evict-address").value;
+    const encodedAddress = encodeURIComponent(address);
+    const evictionLink = `https://yourdomain.com/property-location?address=${encodedAddress}`;
+  
+    const message = `Eviction Alert: A property at ${address} is flagged for unlawful occupation. Full case details: ${evictionLink}`;
+  
+    // Send to police API (replace with your actual endpoint or SMS gateway)
+    const response = await fetch("/api/notify-police", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        address
+      })
+    });
+  
+    const result = await response.json();
+  
+    if (result.success) {
+      alert("Eviction initiated. Police station has been notified.");
+    } else {
+      alert("Failed to notify police: " + result.error);
+    }
+  });
+   
+  
+document.getElementById("leaseForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const phone = document.getElementById("tenant-phone").value;
+  const tenantId = document.getElementById("tenant-id").value;
+
+  const leaseLink = `https://yourdomain.com/lease-review?tenant=${encodeURIComponent(tenantId)}`;
+
+  const message = `Dear tenant, please review your lease terms here: ${leaseLink}. Accept or decline accordingly.`;
+
+  // Send SMS via backend
+  const response = await fetch("/api/send-sms", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ phone, message })
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    alert("Lease submitted and SMS sent to tenant.");
+  } else {
+    alert("Error sending SMS: " + result.error);
+  }
+});
+
+  document.querySelector("#lease-form").addEventListener("submit", function (e) {
+    e.preventDefault(); // Stop form from refreshing page
+
+    const phoneInput = document.querySelector("#tenant-phone").value.trim();
+    const tenantId = document.querySelector("#tenant-id").value.trim();
+
+    const message = `Dear Tenant (${tenantId}), your lease agreement is ready. Please review and respond at: https://yourdomain.com/lease-review`;
+
+    // Validate phone format (basic check)
+    if (!phoneInput.startsWith("+254") || phoneInput.length < 12) {
+      alert("Enter a valid Kenyan phone number with country code, e.g. +2547XXXXXXX");
+      return;
+    }
+
+    fetch("/api/send-sms", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        to: phoneInput,
+        message: message
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert("SMS sent successfully!");
+      console.log(data);
+    })
+    .catch(error => {
+      alert("Failed to send SMS.");
+      console.error(error);
+    });
+  });
+</script>
+  
+</body>
+</html>

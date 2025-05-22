@@ -1,0 +1,195 @@
+<!-- make-entries.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Make Entries - E-constructor</title>
+  <link rel="stylesheet" href="e-constructor2.css">
+  <style>
+    header, .navbar {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+    .navbar {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar li {
+      margin: 0 15px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .navbar a:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .management-links {
+      background-color: rgba(0, 0, 0, 0.6); /* dark translucent background */
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      list-style-type: none;
+      margin: 20px auto;
+}
+
+.management-links li {
+  margin: 10px 0;
+}
+
+.management-links a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  display: block;
+  padding: 10px;
+  background-color: #007bff;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.management-links a:hover {
+  background-color: #0056b3;
+}
+.court-links {
+  background-color: rgba(0, 0, 0, 0.6); /* semi-transparent dark background */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  list-style-type: none;
+  margin: 20px auto;
+}
+
+.court-links li {
+  margin: 10px 0;
+}
+
+.court-links a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  display: block;
+  padding: 12px;
+  background-color: #dc3545; /* red for urgency */
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.court-links a:hover {
+  background-color: #c82333;
+}
+.leasing-links {
+  background-color: rgba(0, 0, 0, 0.6); /* dark semi-transparent background */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  list-style-type: none;
+  margin: 20px auto;
+}
+
+.leasing-links li {
+  margin: 10px 0;
+}
+
+.leasing-links a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  display: block;
+  padding: 12px;
+  background-color: #17a2b8; /* Bootstrap info blue */
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.leasing-links a:hover {
+  background-color: #138496;
+}
+
+
+
+    
+  </style>
+</head>
+<body>
+  <header>
+    <h1>E-constructor</h1>
+  </header>
+  <nav class="navbar">
+    <div class="navbar-container">
+     
+      <ul class="navbar-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="make-entries.html">Make Entries</a></li>
+        <li><a href="details.html">View Property Details</a></li>
+        <li><a href="other.html">Other</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <main>
+    <form> 
+      <section id="make-entries">
+        <h2>Make Entries</h2>
+        <label>
+          
+          <details>
+            <summary>Property Ownership and management</summary>
+            <ul class="management-links">
+              <li><a href="property-registration.html">Property Registration</a></li>
+              <li><a href="property-transfer.html">Property Transfer</a></li>
+              <li><a href="manager-credentials.html">Third Party Manager Credentials</a></li>
+              <li><a href="manager-termination.html">Third Party Manager Tenure Termination</a></li>
+            </ul>
+          </details>
+        </label>
+        <label>
+          
+          <details>
+            <summary>court documents</summary>
+            <h3>Court Documents</h3>
+            <ul class="court-links">
+              <li>
+                <a href="court-docs.html">Upload Court Orders, Injunctions, Eviction Notices</a>
+              </li>
+            </ul>
+            
+          </details>
+        </label>
+        <label>
+          
+          <details>
+            <summary>property leasing</summary>
+            <h3>Leasing Agreement</h3>
+            <ul class="leasing-links">
+              <li>
+                <a href="leasing.html">Upload Leasing Agreement</a>
+              </li>
+            </ul>
+
+          </details>
+        </label>
+      </section>
+    </form> 
+  </main>
+</body>
+</html>
+

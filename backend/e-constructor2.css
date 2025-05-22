@@ -1,0 +1,73 @@
+/* Reset some basic styles */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('bigstock--224845453pickering.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #fff;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 51, 102, 0.85);
+    color: white;
+}
+
+.navbar {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+}
+
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.navbar ul li a:hover,
+.btn-other:hover {
+    background-color: #007acc;
+    color: white;
+}
+
+
+.btn-other {
+    background-color: #555;
+    color: white;
+    font-weight: bold;
+}
+
+main {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    padding: 30px;
+    margin: 20px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+footer {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ccc;
+    text-align: center;
+    padding: 20px;
+}
+
+.image {
+    width: 120px;
+}

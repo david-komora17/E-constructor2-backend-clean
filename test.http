@@ -1,0 +1,8 @@
+POST http://localhost:9050/api/police/notify-police
+Content-Type: application/json
+
+{
+  "message": "Illegal occupation reported by ID 42079778 at the premises.",
+  "address": "Nairobi West, Block C, Plot 23"
+}
+

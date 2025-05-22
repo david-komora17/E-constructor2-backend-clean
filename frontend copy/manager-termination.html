@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terminate Manager – E-constructor</title>
+  <link rel="stylesheet" href="e-constructor2.css">
+</head>
+<body>
+  <header>
+    <h1>E-constructor</h1>
+  </header>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="make-entries.html">Make Entries</a></li>
+      <li><a href="details.html">View Property Details</a></li>
+      <li><a href="other.html">Other</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="entry-form">
+      <h3>Terminate Manager Tenure</h3>
+      <form action="/terminate-manager" method="post">
+        <label for="manager-name"><strong>Manager Name</strong></label><br>
+        <input type="text" id="manager-name" name="manager-name" placeholder="Manager Name" required /><br><br>
+
+        <label for="license-number"><strong>License Number</strong></label><br>
+        <input type="text" id="license-number" name="license-number" placeholder="License Number" required /><br><br>
+
+        <label for="termination-reason"><strong>Termination Reason</strong></label><br>
+        <input type="text" id="termination-reason" name="termination-reason" placeholder="Reason for Termination" required /><br><br>
+
+        <button type="submit">Terminate Manager</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <img src="pickering.png" class="image" alt="E-constructor logo">
+      <p>Need help? Reach out to our support team.</p>
+    </div>
+  </footer>
+
+  <script src="e-constructor.js"></script>
+</body>
+</html>

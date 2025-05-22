@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ownership Change – E-constructor</title>
+  <link rel="stylesheet" href="e-constructor2.css">
+</head>
+<body>
+
+  <header>
+    <h1>E-constructor</h1>
+  </header>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="make-entries.html">Make Entries</a></li>
+      <li><a href="details.html">View Property Details</a></li>
+      <li><a href="other.html">Other</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <form action="submit-report.php" method="POST" enctype="multipart/form-data" class="entry-form">
+      <h2>Ownership Change Form</h2>
+
+      <label for="property_postal_address"><strong>Postal Address of the Proposed Project</strong></label>
+      <input type="text" id="property_postal_address" name="property_postal_address" required>
+
+      <label for="buildingId"><strong>Building LR Number</strong></label>
+      <input type="text" id="buildingId" name="building_lr_number" required>
+
+      <label for="formerOwner"><strong>Former Property Owner ID / Company License Number</strong></label>
+      <input type="text" id="formerOwner" name="former_owner_id" required>
+
+      <label for="former Owner Pin"><strong>Enter outgoing owner's E-constructor PIN</strong></label>
+      <input type="password" id="enterPin" name="enter_pin" required><br>
+
+      <label for="newOwner"><strong>Proposed Property Owner ID / Company License Number</strong></label>
+      <input type="text" id="newOwner" name="new_owner_id" required>
+
+      <label for="resetPin"><strong>Reset Your E-constructor PIN</strong></label>
+      <input type="password" id="resetPin" name="reset_pin" required>
+
+      <label for="phone"><strong>Your Phone Number (for SMS verification)</strong></label>
+      <input type="tel" id="phone" name="phone" required pattern="[\d+]{10,15}">
+
+      <label><strong>Purpose of Construction</strong></label><br>
+      <input type="radio" name="entryType" value="for_rent" id="rentalproperty" required>
+
+      <label for="rentalproperty">Property for Rent</label><br>
+      <input type="radio" name="entryType" value="for_sale" id="propertyforsale">
+
+      <label for="propertyforsale">Property for Sale</label>
+      <label>
+        <input type="checkbox" name="former_owner_consent" required>
+        I, the former property owner, give full consent to permanently transfer legal ownership, financial responsibility, and management rights of this property to the proposed new owner.
+      </label><br><br>
+      
+
+      <button type="submit">Submit Form</button>
+    </form>
+  </main>
+
+  <footer>
+    <div>
+      <img src="pickering.png" class="image" alt="E-constructor logo">
+      <p>Need help? Reach out to our support team for guidance.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

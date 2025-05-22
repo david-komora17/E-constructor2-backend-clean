@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Court Documents – E-constructor</title>
+  <link rel="stylesheet" href="e-constructor2.css">
+</head>
+<body>
+
+  <header>
+    <h1>E-constructor</h1>
+  </header>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="make-entries.html">Make Entries</a></li>
+      <li><a href="details.html">View Property Details</a></li>
+      <li><a href="other.html">Other</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="court-docs" class="entry-form">
+      <h2>Upload Court Documents</h2>
+
+      <form action="submit-court-docs.php" method="POST" enctype="multipart/form-data">
+        <label for="courtCaseId"><strong>Court Case ID</strong> (e.g., Civil Case Number X of 2023)</label>
+        <input type="text" id="courtCaseId" name="court_case_id" placeholder="Court Case ID" required>
+
+        <label for="courtDocument"><strong>Upload Court Document</strong></label>
+        <input type="file" id="courtDocument" name="court_documents[]" accept=".pdf, .docx, .jpg" multiple required>
+
+        <button type="submit">Submit Form</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <img src="pickering.png" class="image" alt="E-constructor logo">
+      <p>Need legal assistance? Contact your nearest housing tribunal.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!-- other.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Other Services - E-constructor</title>
+  <link rel="stylesheet" href="e-constructor2.css">
+  <style>
+    header, .navbar {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+    .navbar {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar li {
+      margin: 0 15px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .navbar a:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    /* Dark translucent section styling */
+#mpesa-statement {
+  background-color: rgba(0, 0, 0, 0.7); /* Dark translucent background */
+  color: white;
+  padding: 25px;
+  border-radius: 12px;
+  margin: 30px auto;
+  width: 90%;
+  max-width: 550px;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+}
+
+/* Input styling */
+#mpesa-statement input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Button styling */
+#mpesa-statement button {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background-color: #2ecc71; /* Green */
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+#mpesa-statement button:hover {
+  background-color: #27ae60;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>E-constructor</h1>
+  </header>
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="make-entries.html">Make Entries</a></li>
+      <li><a href="details.html">View Property Details</a></li>
+      <li><a href="other.html">Other</a></li>
+    </ul>
+  </nav>
+  <main>
+    <h2>Request M-Pesa Statement</h2>
+    <form>
+      <section id="mpesa-statement" class="entry-form">
+        <h3>Request M-Pesa Statement</h3>
+        <form>
+          <label for="id-serial">ID / Serial Number</label><br>
+          <input type="text" id="id-serial" placeholder="Enter your ID or Serial Number" required /><br><br>
+      
+          <label for="e-pin">E-constructor PIN</label><br>
+          <input type="text" id="e-pin" placeholder="Enter your E-constructor PIN" required /><br><br>
+      
+          <label for="email">Email Address</label><br>
+          <input type="email" id="email" placeholder="Enter your email address" required /><br><br>
+      
+          <label for="mpesa-number">M-Pesa Number</label><br>
+          <input type="tel" id="mpesa-number" placeholder="Enter your M-Pesa number" required /><br><br>
+      
+          <button type="submit">Request Statement</button>
+        </form>
+      </section>
+      
+    </form>
+    <h2>Report Landlord Negligence</h2> 
+    
+    <form id="report-form" class="report-section">
+      <h2>Report Landlord Negligence</h2>
+    
+      <label for="buildingId">Building LR Number:</label>
+      <input type="text" id="buildingId" name="buildingId" placeholder="Enter building LR number" required><br><br>
+    
+      <label for="issueDescription">Describe the Issue:</label>
+      <textarea id="issueDescription" name="issueDescription" placeholder="Describe the issue clearly" required></textarea><br><br>
+    
+      <label for="evidence">Take or Upload Photo Evidence:</label>
+      <input type="file" id="evidence" name="evidence" accept="image/*" capture="environment" required><br><br>
+      
+      <label style="display: block; font-weight: bold; margin-top: 20px;">
+        <input type="checkbox" name="spam_warning_ack" required>
+        I understand that submitting a false or malicious complaint against a landlord is a criminal offense. If found guilty of sending a spam or fraudulent report, I may face legal penalties including fines or imprisonment under applicable laws.
+      </label><br><br>
+      
+      <button type="submit" class="btn-report">Submit Report</button>
+      
+      <p id="report-status"></p>
+    </form>    
+    
+  </main>
+  <script>
+    // JavaScript logic to handle landlord negligence report and freezing process
+
+document.addEventListener("DOMContentLoaded", function () {
+  const reportForm = document.querySelector("form");
+
+  reportForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const buildingId = reportForm.querySelector("input[type='text']").value;
+    const issueDescription = reportForm.querySelector("textarea").value;
+    const evidenceFile = reportForm.querySelector("input[type='file']").files[0];
+
+    if (!buildingId || !issueDescription || !evidenceFile) {
+      alert("All fields are required, including an image.");
+      return;
+    }
+
+    // Step 1: Submit the report to the backend
+    const formData = new FormData();
+    formData.append("buildingId", buildingId);
+    formData.append("description", issueDescription);
+    formData.append("evidence", evidenceFile);
+
+    try {
+      const reportRes = await fetch("/api/report", {
+        method: "POST",
+        body: formData
+      });
+
+      const reportData = await reportRes.json();
+
+      if (!reportRes.ok) throw new Error(reportData.message);
+
+      // Step 2: Initiate freeze request immediately after valid complaint
+      const freezeRes = await fetch("/api/freeze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ buildingId })
+      });
+
+      const freezeData = await freezeRes.json();
+
+      if (!freezeRes.ok) throw new Error(freezeData.message);
+
+      // Step 3: Query M-Pesa for total deposits by affected tenants
+      const depositsRes = await fetch(`/api/tenant-deposits?buildingId=${buildingId}`);
+      const depositData = await depositsRes.json();
+
+      if (!depositsRes.ok) throw new Error(depositData.message);
+
+      const { totalDeposits, tenantCount } = depositData;
+      const compensationAmount = totalDeposits + totalDeposits * 0.10;
+
+      // Step 4: Await magistrate ruling via admin panel/SMS trigger
+      // This would be handled on the server side and triggered later
+      alert(
+        `Report submitted successfully. Compensation estimated at KES ${compensationAmount}. Awaiting magistrate approval to disburse funds.`
+      );
+
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Failed to submit report or process freeze: " + err.message);
+
+      // Step 5: Log reporter info in case of spam (to be handled server-side)
+    }
+  });
+});
+  document.getElementById("report-form").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent page reload
+
+    const status = document.getElementById("report-status");
+    status.textContent = "✅ Report submitted successfully. Thank you for helping improve safety.";
+    status.style.color = "lightgreen";
+
+    // Optionally clear the form
+    this.reset();
+  });
+ </script>
+
+</body>
+</html>

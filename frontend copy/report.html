@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-constructor</title>
+</head>
+<body>
+    <section class="action-selector">
+        <h2>Select an Action</h2>
+        <label>
+          <input type="radio" name="action" value="statement" />
+          Request M-Pesa Statement
+        </label>
+        <label>
+          <input type="radio" name="action" value="report" />
+          Report Landlord Negligence
+        </label>
+      </section>
+
+      <!-- M-Pesa Statement Form -->
+<form id="mpesa-statement-form" style="display: none;">
+    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your M-Pesa number" required />
+    <button type="submit">Request Statement</button>
+    <p id="statement-status"></p>
+  </form>
+  
+  <!-- Landlord Negligence Report Form -->
+  <form id="report-form" style="display: none;">
+    <input type="text" name="building lr number" placeholder="Building/Plot LR number" required />
+    <textarea name="description" placeholder="Describe the negligence" required></textarea>
+    <input type="file" name="evidence" accept="image/*" />
+    <button type="submit">Submit Report</button>
+    <p id="report-status"></p>
+  </form>
+ 
+ <script>
+  const actionRadios = document.querySelectorAll('input[name="action"]');
+  const mpesaForm = document.getElementById('mpesa-statement-form');
+  const reportForm = document.getElementById('report-form');
+
+  actionRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (radio.value === 'statement') {
+        mpesaForm.style.display = 'block';
+        reportForm.style.display = 'none';
+      } else if (radio.value === 'report') {
+        mpesaForm.style.display = 'none';
+        reportForm.style.display = 'block';
+      }
+    });
+  });
+ </script>
+ <style>
+    .action-selector {
+      text-align: center;
+      margin: 20px 0;
+    }
+  
+    .action-selector label {
+      margin: 10px;
+      display: inline-block;
+      font-size: 16px;
+    }
+  
+    form {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 12px;
+    }
+  
+    form input, form textarea {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+  
+    form button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  
+    form button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+  
+</body>
+</html>
