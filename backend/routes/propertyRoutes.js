@@ -8,6 +8,7 @@ const {
   uploadLeaseAgreement,
   getAllProperties,
   getPropertyById,
+  searchProperty,  // added here
 } = require('../controllers/propertyController');
 
 const upload = require('../middleware/upload'); // express-fileupload middleware
@@ -35,5 +36,8 @@ router.get('/', getAllProperties);
 
 // Get property by ID
 router.get('/:id', getPropertyById);
+
+// New: Search property by lr and county (query params)
+router.get('/search', searchProperty);
 
 module.exports = router;

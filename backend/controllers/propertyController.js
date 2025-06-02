@@ -1,5 +1,6 @@
 const Property = require('../models/Property');
 const path = require('path');
+const QRCode = require('qrcode');
 
 // Register Property
 exports.registerProperty = async (req, res) => {
@@ -11,7 +12,8 @@ exports.registerProperty = async (req, res) => {
       pin,
       phone,
       purpose,
-      paybill
+      paybill,
+      county // make sure county is included here if applicable
     } = req.body;
 
     let docs = [];
@@ -38,6 +40,7 @@ exports.registerProperty = async (req, res) => {
       phone,
       purpose,
       paybill,
+      county, // added
       documents: docs
     });
 
@@ -75,12 +78,21 @@ exports.uploadPermit = async (req, res) => {
   }
 };
 
-// Generate QR Code (Stub)
+// Generate QR Code
 exports.generateQrCode = async (req, res) => {
   try {
-    // Placeholder logic
-    res.status(200).json({ message: 'QR code generated (placeholder)' });
+    const { propertyId } = req.params;
+    const property = await Property.findById(propertyId);
+    if (!property) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+
+    const link = `https:///details.html?id=${propertyId}`;
+    const qrCodeDataURL = await QRCode.toDataURL(link);
+
+    res.status(200).json({ qrCode: qrCodeDataURL });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'QR generation failed' });
   }
 };
@@ -123,5 +135,36 @@ exports.getPropertyById = async (req, res) => {
     res.status(200).json(property);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch property' });
+  }
+};
+
+// New: Search Property by LR and County
+exports.searchProperty = async (req, res) => {
+  const { lr, county } = req.query;
+
+  if (!lr || !county) {
+    return res.status(400).json({ message: "LR number and county are required" });
+  }
+
+  try {
+    const property = await Property.findOne({ lrNumber: lr, county: county });
+
+    if (!property) {
+      return res.status(404).json({ message: "Property not found" });
+    }
+
+    res.json({
+      property: {
+        lrNumber: property.lrNumber,
+        county: property.county,
+        name: property.name || "Unnamed Property",
+        status: property.status || "Pending",
+        purpose: property.purpose || "Unknown",
+        qrCodeUrl: property.qrCodeUrl || null
+      }
+    });
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

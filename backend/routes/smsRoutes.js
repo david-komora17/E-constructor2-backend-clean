@@ -1,4 +1,3 @@
- // backend/routes/smsRoutes.js
 const express = require("express");
 const router = express.Router();
 const africastalking = require("africastalking");
@@ -10,9 +9,7 @@ const at = africastalking({
 
 const sms = at.SMS;
 
-// @route   POST /api/send-sms
-// @desc    Send SMS using Africa's Talking
-// @access  Public or Protected (Optional: Add middleware)
+// ✅ General SMS endpoint
 router.post("/", async (req, res) => {
   const { to, message } = req.body;
 
@@ -32,16 +29,34 @@ router.post("/", async (req, res) => {
       data: response
     });
   } catch (err) {
-  console.error("❌ Africa's Talking SMS Error:", err);
-  if (err.response) {
-    console.error("Response data:", err.response.data);
-    console.error("Response status:", err.response.status);
+    console.error("❌ Africa's Talking SMS Error:", err);
+    res.status(500).json({ success: false, error: "Failed to send SMS.", details: err.message });
   }
-  res.status(500).json({ success: false, error: "Failed to send SMS.", details: err.message });
-}
+});
 
+// ✅ Lease link SMS endpoint
+router.post("/send-lease-link", async (req, res) => {
+  const { tenantPhone, leaseUrl } = req.body;
+
+  if (!tenantPhone || !leaseUrl) {
+    return res.status(400).json({ success: false, error: "Missing tenantPhone or leaseUrl." });
+  }
+
+  try {
+    const response = await sms.send({
+      to: [tenantPhone],
+      message: `Dear tenant, access your lease agreement here: ${leaseUrl}`,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Lease link sent successfully",
+      data: response
+    });
+  } catch (err) {
+    console.error("❌ Failed to send lease link SMS:", err);
+    res.status(500).json({ success: false, error: "Failed to send lease link.", details: err.message });
+  }
 });
 
 module.exports = router;
-
- 

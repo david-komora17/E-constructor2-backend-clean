@@ -1,8 +1,16 @@
-POST http://localhost:9050/api/police/notify-police
+### Test server is running
+GET https://e-constructor-production.up.railway.app/
+
+### Submit property
+POST https://e-constructor-production.up.railway.app/api/property
 Content-Type: application/json
 
 {
-  "message": "Illegal occupation reported by ID 42079778 at the premises.",
-  "address": "Nairobi West, Block C, Plot 23"
+  "lrNumber": "1234",
+  "ownerName": "David Komora",
+  "projectUse": "residential",
+  "units": 10
 }
 
+### Fetch all properties
+GET https://e-constructor-production.up.railway.app/api/property

@@ -4,21 +4,23 @@
     "description": "Backend for the E-Constructor platform",
     "main": "server.js",
     "scripts": {
-       "start": "nodemon server.js"
-
+        "start": "nodemon server.js"
     },
     "keywords": [],
     "author": "David",
     "license": "ISC",
     "dependencies": {
         "africastalking": "^0.7.3",
+        "cors": "^2.8.5",
         "dayjs": "^1.11.13",
         "dotenv": "^16.3.1",
         "express": "^4.18.4",
+        "express-fileupload": "^1.5.1",
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^7.0.5",
         "multer": "^1.4.5-lts.2",
-        "nodemailer": "^7.0.3"
+        "nodemailer": "^7.0.3",
+        "qrcode": "^1.5.4"
     },
     "devDependencies": {
         "nodemon": "^3.0.1"

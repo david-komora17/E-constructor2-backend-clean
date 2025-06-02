@@ -1,64 +1,24 @@
-const axios = require('axios');
-const dayjs = require('dayjs');
+// controllers/mpesaController.js
 require('dotenv').config();
 
-// ================== Get Access Token ==================
-const getAccessToken = async () => {
-  const url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
-
-  const auth = Buffer.from(
-    `${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`
-  ).toString('base64');
-
-  const headers = {
-    Authorization: `Basic ${auth}`,
-  };
-
-  const response = await axios.get(url, { headers });
-  return response.data.access_token;
-};
-
-// ================== Lipa Na M-Pesa ==================
-const lipaNaMpesaOnline = async (phone, amount) => {
-  const shortcode = process.env.MPESA_SHORTCODE;
-  const passkey = process.env.MPESA_PASSKEY;
-  const timestamp = dayjs().format('YYYYMMDDHHmmss');
-  const password = Buffer.from(shortcode + passkey + timestamp).toString('base64');
-
-  const accessToken = await getAccessToken();
-
-  const payload = {
-    BusinessShortCode: shortcode,
-    Password: password,
-    Timestamp: timestamp,
-    TransactionType: 'CustomerPayBillOnline',
-    Amount: amount,
-    PartyA: phone,
-    PartyB: shortcode,
-    PhoneNumber: phone,
-    CallBackURL: process.env.MPESA_CALLBACK_URL,
-    AccountReference: 'E-Constructor',
-    TransactionDesc: 'Building Complaint Fee'
-  };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`
-  };
-
-  const url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
-
-  const response = await axios.post(url, payload, { headers });
-  return response.data;
-};
-
-// ================== Controller Handler ==================
+// ================== MOCKED STK PUSH (No Daraja Call) ==================
 const initiatePayment = async (req, res) => {
   try {
     const { phone, amount } = req.body;
-    const result = await lipaNaMpesaOnline(phone, amount);
-    res.status(200).json(result);
+
+    console.log(`Simulated M-Pesa payment: KES ${amount} from ${phone}`);
+
+    const mockResponse = {
+      MerchantRequestID: 'Mock12345',
+      CheckoutRequestID: 'MockCheckout12345',
+      ResponseCode: '0',
+      ResponseDescription: 'Success. Request accepted for processing',
+      CustomerMessage: 'Simulated STK push sent successfully'
+    };
+
+    res.status(200).json(mockResponse);
   } catch (error) {
-    console.error('STK Push Error:', error.response?.data || error.message);
+    console.error('Simulated STK Push Error:', error.message);
     res.status(500).json({ message: 'STK Push failed', error: error.message });
   }
 };
@@ -66,7 +26,7 @@ const initiatePayment = async (req, res) => {
 // ================== Freeze Account Controller ==================
 const freezeAccount = async (req, res) => {
   try {
-    console.log('Incoming freezeAccount request body:', req.body); // Debug log
+    console.log('Incoming freezeAccount request body:', req.body);
 
     const { landlordId, reason } = req.body;
 
@@ -82,11 +42,7 @@ const freezeAccount = async (req, res) => {
   }
 };
 
-
 module.exports = {
   initiatePayment,
-  freezeAccount // ✅ Add this line
+  freezeAccount
 };
-
-
-

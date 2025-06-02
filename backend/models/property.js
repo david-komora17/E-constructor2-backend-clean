@@ -8,7 +8,11 @@ const PropertySchema = new mongoose.Schema({
   phone: String,
   purpose: String,
   paybill: String,
-  documents: [String]
+  documents: [String],
+
+  qrCode: {
+  type: String
+}
 });
 
 module.exports = mongoose.model('Property', PropertySchema);
