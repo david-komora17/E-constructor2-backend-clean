@@ -4,7 +4,8 @@
     "description": "Backend for the E-Constructor platform",
     "main": "server.js",
     "scripts": {
-        "start": "nodemon server.js"
+     "start": "node server.js",
+     "dev": "nodemon server.js"
     },
     "keywords": [],
     "author": "David",
