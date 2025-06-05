@@ -1,4 +1,4 @@
-const Property = require('../models/');
+const Property = require('../models/Property');
 const path = require('path');
 const QRCode = require('qrcode');
 
