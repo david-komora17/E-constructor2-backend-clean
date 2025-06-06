@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+console.log("📦 Property routes loaded");
+
 const {
   changeOwnership,
   registerProperty,

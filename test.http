@@ -1,14 +1,14 @@
-POST http://localhost:7050/api/property/change-ownership
+POST https://e-constructor2-backend-clean.onrender.com/api/property/change-ownership
 Content-Type: application/json
 
 {
-  "property_postal_address": "123 ABC Street",
-  "building_lr_number": "LR-001",
-  "former_owner_id": "A12345",
-  "enter_pin": "1111",
-  "new_owner_id": "B67890",
-  "reset_pin": "2222",
-  "phone": "0712345678",
-  "entryType": "for_rent",
+  "property_postal_address": "Test Ave",
+  "building_lr_number": "LR-999-ZZ",
+  "former_owner_id": "OWNER321",
+  "enter_pin": "4321",
+  "new_owner_id": "NEW654",
+  "reset_pin": "5678",
+  "phone": "+254712345678",
+  "entryType": "for_sale",
   "former_owner_consent": true
 }

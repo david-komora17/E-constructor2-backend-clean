@@ -139,30 +139,11 @@ exports.getPropertyById = async (req, res) => {
 };
 
 // ownership change
-
-// At the top of the file
 exports.changeOwnership = async (req, res) => {
-  try {
-    const {
-      property_postal_address,
-      building_lr_number,
-      former_owner_id,
-      enter_pin,
-      new_owner_id,
-      reset_pin,
-      phone,
-      entryType,
-      former_owner_consent
-    } = req.body;
-
-    console.log('Received ownership change:', req.body);
-
-    res.status(200).json({ message: 'Ownership change received successfully' });
-  } catch (error) {
-    console.error('Error in ownership change:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  console.log("🧭 /change-ownership hit!");
+  res.status(200).json({ message: "Mock changeOwnership working" });
 };
+
 
 // New: Search Property by LR and County
 exports.searchProperty = async (req, res) => {
