@@ -1,16 +1,14 @@
-### Test server is running
-GET https://e-constructor-production.up.railway.app/
-
-### Submit property
-POST https://e-constructor-production.up.railway.app/api/property
+POST http://localhost:7050/api/property/change-ownership
 Content-Type: application/json
 
 {
-  "lrNumber": "1234",
-  "ownerName": "David Komora",
-  "projectUse": "residential",
-  "units": 10
+  "property_postal_address": "123 ABC Street",
+  "building_lr_number": "LR-001",
+  "former_owner_id": "A12345",
+  "enter_pin": "1111",
+  "new_owner_id": "B67890",
+  "reset_pin": "2222",
+  "phone": "0712345678",
+  "entryType": "for_rent",
+  "former_owner_consent": true
 }
-
-### Fetch all properties
-GET https://e-constructor-production.up.railway.app/api/property

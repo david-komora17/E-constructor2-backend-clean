@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {
+  changeOwnership,
   registerProperty,
   uploadPermit,
   generateQrCode,
@@ -24,6 +25,9 @@ router.post('/upload-permit/:propertyId', uploadPermit);
 
 // Generate QR code
 router.get('/generate-qr/:propertyId', generateQrCode);
+
+// ownership change form
+router.post('/change-ownership', changeOwnership);
 
 // Register tenant (assuming tenant details in req.body)
 router.post('/register-tenant/:propertyId', registerTenant);
