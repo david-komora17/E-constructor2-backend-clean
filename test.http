@@ -1,14 +1,1 @@
-POST https://E-constructor2-backend-clean.onrender.com/api/property/change-ownership
-Content-Type: application/json
-
-{
-  "property_postal_address": "123",
-  "building_lr_number": "LR999",
-  "former_owner_id": "oldUser",
-  "enter_pin": "1234",
-  "new_owner_id": "newUser",
-  "reset_pin": "5678",
-  "phone": "+254712345678",
-  "entryType": "manual",
-  "former_owner_consent": true
-}
+curl -X GET http://localhost:10000/api/property/<PROPERTY_ID>

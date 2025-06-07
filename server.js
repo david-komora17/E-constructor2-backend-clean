@@ -11,8 +11,6 @@ const propertyRoutes = require('./backend/routes/propertyRoutes');
 const notifyPoliceRoutes = require('./backend/routes/notifyPoliceRoutes');
 const magistrateRoutes = require('./backend/routes/magistrateRoutes');
 
-
-
 // Load env vars
 dotenv.config();
 connectDB();
@@ -34,7 +32,7 @@ app.use('/api/magistrates', magistrateRoutes);
 // Error Handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 7050;
+const PORT = process.env.PORT || 11000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 // Force redeploy on Railway
 
