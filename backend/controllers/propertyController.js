@@ -1,6 +1,7 @@
 const Property = require('../models/Property');
 const path = require('path');
 const QRCode = require('qrcode');
+console.log("🔧 Property controller loaded");
 
 // Register Property
 exports.registerProperty = async (req, res) => {
