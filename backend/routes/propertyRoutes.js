@@ -1,7 +1,6 @@
+// backend/routes/propertyRoutes.js
 const express = require('express');
 const router = express.Router();
-console.log("📦 Property routes loaded");
-
 const {
   changeOwnership,
   registerProperty,
@@ -11,39 +10,42 @@ const {
   uploadLeaseAgreement,
   getAllProperties,
   getPropertyById,
-  searchProperty,  // added here
+  searchProperty
 } = require('../controllers/propertyController');
 
-const upload = require('../middleware/upload'); // express-fileupload middleware
+const upload = require('../middleware/upload');
 
-// Enable file upload globally using express-fileupload middleware
+// Debug log to confirm this file is loaded
+console.log("📦 Property routes loaded");
+
+// Middleware for handling file uploads
 router.use(upload);
 
-// Register property (documents field – array of PDFs)
-router.post('/register', registerProperty);
-
-// Upload permit separately (field should be 'permit' as per controller)
-router.post('/upload-permit/:propertyId', uploadPermit);
-
-// Generate QR code
-router.get('/generate-qr/:propertyId', generateQrCode);
-
-// ownership change form
+// Route: Change Ownership (✅ You asked for this)
 router.post('/change-ownership', changeOwnership);
 
-// Register tenant (assuming tenant details in req.body)
+// Route: Register a new property
+router.post('/register', registerProperty);
+
+// Route: Upload a construction permit PDF
+router.post('/upload-permit/:propertyId', uploadPermit);
+
+// Route: Generate a QR code for a property
+router.get('/generate-qr/:propertyId', generateQrCode);
+
+// Route: Register a tenant
 router.post('/register-tenant/:propertyId', registerTenant);
 
-// Upload lease agreement (field: leaseAgreement)
+// Route: Upload lease agreement (PDF)
 router.post('/upload-lease/:propertyId', uploadLeaseAgreement);
 
-// Get all properties
+// Route: Get all properties
 router.get('/', getAllProperties);
 
-// Get property by ID
+// Route: Get a property by its ID
 router.get('/:id', getPropertyById);
 
-// New: Search property by lr and county (query params)
+// Route: Search property by LR number and county
 router.get('/search', searchProperty);
 
 module.exports = router;
