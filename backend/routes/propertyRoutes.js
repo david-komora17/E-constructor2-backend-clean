@@ -16,7 +16,8 @@ const {
 const upload = require('../middleware/upload');
 
 // Debug log to confirm this file is loaded
-console.log("📦 Property routes loaded");
+console.log("📦 propertyRoutes.js is loaded!");
+
 
 // Middleware for handling file uploads
 router.use(upload);
