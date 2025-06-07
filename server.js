@@ -1,4 +1,5 @@
 // server.js (Cleaned & Ready to Launch)
+console.log("✅ /api/property route mounted");
 require('dotenv').config();
 const express = require('express');
 const dotenv = require('dotenv');
@@ -29,8 +30,6 @@ app.use('/api/police', require('./backend/routes/notifyPoliceRoutes'));
 app.use('/api/sms', require('./backend/routes/smsRoutes'));
 app.use('/api/user', require('./backend/routes/userRoutes'));
 app.use('/api/magistrates', magistrateRoutes);
-
-
 
 // Error Handler
 app.use(errorHandler);
