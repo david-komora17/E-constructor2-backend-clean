@@ -39,4 +39,7 @@ const PORT = process.env.PORT || 7050;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 // Force redeploy on Railway
 
+// 🔁 Trigger redeploy - 2025-06-07
+
+
  
