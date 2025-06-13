@@ -1,4 +1,7 @@
 // backend/routes/propertyRoutes.js
+const multer = require('multer');
+const storage = multer.memoryStorage(); // Or diskStorage if saving files
+const upload = multer({ storage });
 
 const express = require('express');
 const router = express.Router();
@@ -36,7 +39,8 @@ validateHandler(getPropertyById, 'getPropertyById');
 validateHandler(searchProperty, 'searchProperty');
 
 // ✅ Register property via POST /api/property
-router.post('/', registerProperty);
+router.post('/', upload.array('documents'), registerProperty);
+
 
 // 📌 Search property by LR number and County
 router.get('/search', searchProperty);

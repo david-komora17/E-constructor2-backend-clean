@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
 const errorHandler = require('./backend/middleware/errorHandler');
 
@@ -28,8 +27,6 @@ app.use(express.json());
 
 // ✅ ADD THIS LINE: To handle form fields in multipart/form-data
 app.use(express.urlencoded({ extended: true }));
-
-app.use(fileUpload());
 app.use('/uploads', express.static('public/uploads'));
 
 // ✅ Routes
@@ -44,5 +41,5 @@ app.use('/api/magistrates', magistrateRoutes);
 app.use(errorHandler);
 
 // ✅ Start Server
-const PORT = process.env.PORT || 11001;
+const PORT = process.env.PORT || 11005;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
