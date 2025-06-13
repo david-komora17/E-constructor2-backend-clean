@@ -7,11 +7,12 @@ const tenantSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phone: {
-    type: String,
-    required: true,
-    match: [/^\+?[0-9]{7,15}$/, 'Please enter a valid phone number'],
-  },
+  phoneNumber: {
+  type: String,
+  required: true,
+  match: [/^\+?[0-9]{7,15}$/, 'Please enter a valid phone number'],
+},
+
   email: {
     type: String,
     required: false,

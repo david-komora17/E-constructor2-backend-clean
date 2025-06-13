@@ -1,16 +1,20 @@
+// backend/routes/mpesaRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const { freezeAccount, initiatePayment } = require('../controllers/mpesaController'); // ✅ use initiatePayment instead
+const {
+  freezeAccount,
+  initiatePayment
+} = require('../controllers/mpesaController');
 const { getMpesaStatement } = require('../utils/mpesaUtils');
 
-// Freeze landlord account
+// 🔒 Freeze landlord M-Pesa account
 router.post('/freeze', freezeAccount);
 
+// 💸 Simulate M-Pesa STK Push payment
+router.post('/stkpush', initiatePayment);
 
-// STK Push for payments
-router.post('/stkpush', initiatePayment); // ✅ use initiatePayment, not lipaNaMpesaOnline
-
-// Send M-Pesa statement
+// 📄 Request M-Pesa statement
 router.post('/request-mpesa-statement', async (req, res) => {
   const { phoneNumber } = req.body;
 
@@ -23,14 +27,14 @@ router.post('/request-mpesa-statement', async (req, res) => {
 
   try {
     const statement = await getMpesaStatement(phoneNumber);
-    res.json({
+    return res.status(200).json({
       success: true,
       message: `Statement sent to ${phoneNumber}`,
       data: statement,
     });
   } catch (error) {
     console.error('❌ Statement Fetch Error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Could not fetch M-Pesa statement.',
     });

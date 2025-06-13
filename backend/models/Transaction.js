@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');  // <-- Add this line at the top
 
 const transactionSchema = new mongoose.Schema({
-  phone: {
+  phoneNumber: {  // ✅ renamed to match utility usage
     type: String,
     required: true
   },

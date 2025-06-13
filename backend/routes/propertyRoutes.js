@@ -1,34 +1,65 @@
+// backend/routes/propertyRoutes.js
+
 const express = require('express');
 const router = express.Router();
+const controller = require('../controllers/propertyController');
+
+// Destructure and validate required functions from the controller
 const {
-  changeOwnership,
   registerProperty,
+  changeOwnership,
   uploadPermit,
   generateQrCode,
   registerTenant,
   uploadLeaseAgreement,
   getAllProperties,
   getPropertyById,
-  searchProperty
-} = require('../controllers/propertyController');
+  searchProperty,
+} = controller;
 
-const upload = require('../middleware/upload');
+// Helper to ensure all required handlers are defined
+function validateHandler(handler, name) {
+  if (typeof handler !== 'function') {
+    throw new Error(`❌ Missing or invalid controller function: ${name}`);
+  }
+}
 
-// Debug log
-console.log("📦 propertyRoutes.js is loaded!");
+// Validate all routes before registering them
+validateHandler(registerProperty, 'registerProperty');
+validateHandler(changeOwnership, 'changeOwnership');
+validateHandler(uploadPermit, 'uploadPermit');
+validateHandler(generateQrCode, 'generateQrCode');
+validateHandler(registerTenant, 'registerTenant');
+validateHandler(uploadLeaseAgreement, 'uploadLeaseAgreement');
+validateHandler(getAllProperties, 'getAllProperties');
+validateHandler(getPropertyById, 'getPropertyById');
+validateHandler(searchProperty, 'searchProperty');
 
-// Middleware for handling file uploads
-router.use(upload);
+// ✅ Register property via POST /api/property
+router.post('/', registerProperty);
 
-// 🔄 ORDER MATTERS — more specific routes FIRST
+// 📌 Search property by LR number and County
+router.get('/search', searchProperty);
+
+// 📌 Change ownership of a property
 router.post('/change-ownership', changeOwnership);
-router.post('/register', registerProperty);
-router.post('/upload-permit/:propertyId', uploadPermit);
-router.get('/generate-qr/:propertyId', generateQrCode);
-router.post('/register-tenant/:propertyId', registerTenant);
-router.post('/upload-lease/:propertyId', uploadLeaseAgreement);
-router.get('/search', searchProperty); // ✅ Move this above :id
+
+// 📌 Upload building permit document
+router.post('/upload-permit', uploadPermit);
+
+// 📌 Generate QR code for a registered property
+router.get('/generate-qr/:id', generateQrCode);
+
+// 📌 Register a new tenant for a property
+router.post('/register-tenant', registerTenant);
+
+// 📌 Upload lease agreement document
+router.post('/upload-lease', uploadLeaseAgreement);
+
+// 📌 Get all registered properties
 router.get('/', getAllProperties);
-router.get('/:id', getPropertyById); // ❗ This must be LAST
+
+// 📌 Get property details by ID
+router.get('/:id', getPropertyById);
 
 module.exports = router;
