@@ -31,5 +31,5 @@ app.use('/api/magistrates', magistrateRoutes);
 // ✅ Global error handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 11003;
+const PORT = process.env.PORT || 11006;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
