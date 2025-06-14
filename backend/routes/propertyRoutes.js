@@ -2,7 +2,6 @@
 const multer = require('multer');
 const storage = multer.memoryStorage(); // Or diskStorage if saving files
 const upload = multer({ storage });
-
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/propertyController');
