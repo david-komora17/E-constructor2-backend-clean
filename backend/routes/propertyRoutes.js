@@ -1,28 +1,12 @@
 // backend/routes/propertyRoutes.js
-
-const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const router = express.Router();
-
-// ✅ Save files to disk in a public/uploads directory
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, '../../public/uploads');
-    fs.mkdirSync(uploadPath, { recursive: true });
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  }
-});
-
+const storage = multer.memoryStorage(); // Or diskStorage if saving files
 const upload = multer({ storage });
-
+const express = require('express');
+const router = express.Router();
 const controller = require('../controllers/propertyController');
+
+// Destructure and validate required functions from the controller
 const {
   registerProperty,
   changeOwnership,
@@ -35,17 +19,49 @@ const {
   searchProperty,
 } = controller;
 
-// ✅ File upload with metadata
-router.post('/', upload.single('documents'), registerProperty);
+// Helper to ensure all required handlers are defined
+function validateHandler(handler, name) {
+  if (typeof handler !== 'function') {
+    throw new Error(`❌ Missing or invalid controller function: ${name}`);
+  }
+}
 
-// 📌 Additional endpoints
+// Validate all routes before registering them
+validateHandler(registerProperty, 'registerProperty');
+validateHandler(changeOwnership, 'changeOwnership');
+validateHandler(uploadPermit, 'uploadPermit');
+validateHandler(generateQrCode, 'generateQrCode');
+validateHandler(registerTenant, 'registerTenant');
+validateHandler(uploadLeaseAgreement, 'uploadLeaseAgreement');
+validateHandler(getAllProperties, 'getAllProperties');
+validateHandler(getPropertyById, 'getPropertyById');
+validateHandler(searchProperty, 'searchProperty');
+
+// ✅ Register property via POST /api/property
+router.post('/', upload.array('documents'), registerProperty);
+
+// 📌 Search property by LR number and County
 router.get('/search', searchProperty);
+
+// 📌 Change ownership of a property
 router.post('/change-ownership', changeOwnership);
+
+// 📌 Upload building permit document
 router.post('/upload-permit', uploadPermit);
+
+// 📌 Generate QR code for a registered property
 router.get('/generate-qr/:id', generateQrCode);
+
+// 📌 Register a new tenant for a property
 router.post('/register-tenant', registerTenant);
+
+// 📌 Upload lease agreement document
 router.post('/upload-lease', uploadLeaseAgreement);
+
+// 📌 Get all registered properties
 router.get('/', getAllProperties);
+
+// 📌 Get property details by ID
 router.get('/:id', getPropertyById);
 
 module.exports = router;

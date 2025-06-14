@@ -1,13 +1,12 @@
 // backend/controllers/propertyController.js
 
 const Property = require('../models/Property');
-const path = require('path');
 
-// ✅ Register Property — now saves uploaded permit file path
+// ✅ Register Property — fully aligned with your schema
 const registerProperty = async (req, res) => {
   try {
     console.log("📩 Form data:", req.body);
-    console.log("📎 Uploaded file:", req.file); // multer puts the single file in req.file
+    console.log("📎 Uploaded files:", req.files);
 
     const {
       postalAddress,
@@ -18,37 +17,30 @@ const registerProperty = async (req, res) => {
       floors
     } = req.body;
 
-    // Validate required fields
     if (!postalAddress || !lrNumber || !ownerID || !purpose || !paybill || !floors) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    // Handle uploaded permit file
-    const permitPath = req.file ? `/uploads/${req.file.filename}` : "";
 
     // Create new Property document
     const newProperty = new Property({
       postalAddress,
       lrNumber,
-      permitCertificate: permitPath,
+      permitCertificate: "",        // Placeholder, file upload not handled yet
       ownerName: ownerID,
       projectUse: purpose,
       unitDetails: `${floors} floors`,
       mpesaInfo: paybill,
-      bankInfo: "",
-      occupancyCertificate: "",
-      leasingAgreement: "",
-      qrCodeUrl: ""
+      bankInfo: "",                 // Optional
+      occupancyCertificate: "",     // Optional
+      leasingAgreement: "",         // Optional
+      qrCodeUrl: ""                 // Optional, to be set later
     });
 
     const saved = await newProperty.save();
 
     return res.status(201).json({
       message: "Property registered successfully",
-      property: {
-        _id: saved._id,
-        __v: saved.__v
-      }
+      propertyId: saved._id,
     });
 
   } catch (error) {
@@ -57,7 +49,7 @@ const registerProperty = async (req, res) => {
   }
 };
 
-// Placeholder stubs
+// Placeholder functions for other routes
 const changeOwnership = async (req, res) => {
   res.status(200).json({ message: "changeOwnership stub" });
 };
@@ -90,7 +82,7 @@ const searchProperty = async (req, res) => {
   res.status(200).json({ message: "searchProperty stub" });
 };
 
-// Export all controllers
+// Export controller functions
 module.exports = {
   registerProperty,
   changeOwnership,
