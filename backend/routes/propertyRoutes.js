@@ -38,7 +38,7 @@ validateHandler(getPropertyById, 'getPropertyById');
 validateHandler(searchProperty, 'searchProperty');
 
 // ✅ Register property via POST /api/property
-router.post('/', upload.array('documents'), registerProperty);
+router.post('/', upload.single('documents'), registerProperty);
 
 // 📌 Search property by LR number and County
 router.get('/search', searchProperty);
