@@ -1,12 +1,13 @@
 // backend/controllers/propertyController.js
 
 const Property = require('../models/Property');
+const path = require('path');
 
-// ✅ Register Property — fully aligned with your schema
+// ✅ Register Property — now saves uploaded permit file path
 const registerProperty = async (req, res) => {
   try {
     console.log("📩 Form data:", req.body);
-    console.log("📎 Uploaded files:", req.files);
+    console.log("📎 Uploaded file:", req.file); // multer puts the single file in req.file
 
     const {
       postalAddress,
@@ -17,23 +18,27 @@ const registerProperty = async (req, res) => {
       floors
     } = req.body;
 
+    // Validate required fields
     if (!postalAddress || !lrNumber || !ownerID || !purpose || !paybill || !floors) {
       return res.status(400).json({ message: "Missing required fields" });
     }
+
+    // Handle uploaded permit file
+    const permitPath = req.file ? `/uploads/${req.file.filename}` : "";
 
     // Create new Property document
     const newProperty = new Property({
       postalAddress,
       lrNumber,
-      permitCertificate: "",        // Placeholder, file upload not handled yet
+      permitCertificate: permitPath,
       ownerName: ownerID,
       projectUse: purpose,
       unitDetails: `${floors} floors`,
       mpesaInfo: paybill,
-      bankInfo: "",                 // Optional
-      occupancyCertificate: "",     // Optional
-      leasingAgreement: "",         // Optional
-      qrCodeUrl: ""                 // Optional, to be set later
+      bankInfo: "",
+      occupancyCertificate: "",
+      leasingAgreement: "",
+      qrCodeUrl: ""
     });
 
     const saved = await newProperty.save();
@@ -52,7 +57,7 @@ const registerProperty = async (req, res) => {
   }
 };
 
-// Placeholder functions for other routes
+// Placeholder stubs
 const changeOwnership = async (req, res) => {
   res.status(200).json({ message: "changeOwnership stub" });
 };
@@ -85,7 +90,7 @@ const searchProperty = async (req, res) => {
   res.status(200).json({ message: "searchProperty stub" });
 };
 
-// Export controller functions
+// Export all controllers
 module.exports = {
   registerProperty,
   changeOwnership,
