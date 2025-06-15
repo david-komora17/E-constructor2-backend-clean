@@ -175,21 +175,26 @@ const getPropertyById = async (req, res) => {
   }
 };
 
-// ✅ Search Properties (e.g., by LR number or postal address)
+// ✅ Search Property by LR number + Postal Address (for ownership transfer)
 const searchProperty = async (req, res) => {
   try {
-    const { query } = req.query;
-    const properties = await Property.find({
-      $or: [
-        { lrNumber: { $regex: query, $options: 'i' } },
-        { postalAddress: { $regex: query, $options: 'i' } }
-      ]
-    });
-    res.status(200).json({ results: properties });
+    const { postalAddress, lrNumber } = req.query;
+
+    if (!postalAddress || !lrNumber) {
+      return res.status(400).json({ message: "Missing postal address or LR number" });
+    }
+
+    const property = await Property.findOne({ postalAddress, lrNumber });
+    if (!property) {
+      return res.status(404).json({ message: "Property not found" });
+    }
+
+    res.status(200).json({ propertyId: property._id });
   } catch (err) {
     res.status(500).json({ message: "Search failed", error: err.message });
   }
 };
+
 
 // ✅ Export all
 module.exports = {
