@@ -43,32 +43,32 @@ const registerProperty = async (req, res) => {
 };
 
 // ✅ Change Ownership
+
 const changeOwnership = async (req, res) => {
+  const { propertyId, newOwnerID } = req.body;
+
+  if (!propertyId || !newOwnerID) {
+    return res.status(400).json({ message: "Missing property ID or new owner ID" });
+  }
+
   try {
-    const { propertyId, newOwnerID } = req.body;
-
-    if (!propertyId || !newOwnerID) {
-      return res.status(400).json({ message: "Missing property ID or new owner ID" });
-    }
-
-    const updatedProperty = await Property.findByIdAndUpdate(
+    const updated = await Property.findByIdAndUpdate(
       propertyId,
       { ownerName: newOwnerID },
       { new: true }
     );
 
-    if (!updatedProperty) {
+    if (!updated) {
       return res.status(404).json({ message: "Property not found" });
     }
 
     res.status(200).json({
       message: "Ownership updated successfully",
-      updated: updatedProperty
+      updatedProperty: updated,
     });
-
-  } catch (error) {
-    console.error("❌ Ownership transfer error:", error.message);
-    res.status(500).json({ message: "Server error", error: error.message });
+  } catch (err) {
+    console.error("Ownership update error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
