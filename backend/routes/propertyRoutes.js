@@ -1,12 +1,25 @@
 // backend/routes/propertyRoutes.js
 const multer = require('multer');
-const storage = multer.memoryStorage(); // Or diskStorage if saving files
-const upload = multer({ storage });
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/propertyController');
 
-// Destructure and validate required functions from the controller
+// === ✅ Configure multer ===
+// Use diskStorage to store files in /uploads directory
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // You must create this folder or ensure it's writable
+  },
+  filename: function (req, file, cb) {
+    // Save with original name + timestamp
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const filename = uniqueSuffix + '-' + file.originalname;
+    cb(null, filename);
+  }
+});
+const upload = multer({ storage });
+
+// === ✅ Import controller functions ===
 const {
   registerProperty,
   changeOwnership,
@@ -19,49 +32,52 @@ const {
   searchProperty,
 } = controller;
 
-// Helper to ensure all required handlers are defined
+// === ✅ Validate handlers ===
 function validateHandler(handler, name) {
   if (typeof handler !== 'function') {
     throw new Error(`❌ Missing or invalid controller function: ${name}`);
   }
 }
 
-// Validate all routes before registering them
-validateHandler(registerProperty, 'registerProperty');
-validateHandler(changeOwnership, 'changeOwnership');
-validateHandler(uploadPermit, 'uploadPermit');
-validateHandler(generateQrCode, 'generateQrCode');
-validateHandler(registerTenant, 'registerTenant');
-validateHandler(uploadLeaseAgreement, 'uploadLeaseAgreement');
-validateHandler(getAllProperties, 'getAllProperties');
-validateHandler(getPropertyById, 'getPropertyById');
-validateHandler(searchProperty, 'searchProperty');
+[
+  ['registerProperty', registerProperty],
+  ['changeOwnership', changeOwnership],
+  ['uploadPermit', uploadPermit],
+  ['generateQrCode', generateQrCode],
+  ['registerTenant', registerTenant],
+  ['uploadLeaseAgreement', uploadLeaseAgreement],
+  ['getAllProperties', getAllProperties],
+  ['getPropertyById', getPropertyById],
+  ['searchProperty', searchProperty],
+].forEach(([name, fn]) => validateHandler(fn, name));
 
-// ✅ Register property via POST /api/property
+// === ✅ Define Routes ===
+
+// POST /api/property — Register property
 router.post('/', upload.single('documents'), registerProperty);
 
-// 📌 Search property by LR number and County
+// GET /api/property/search?lrNumber=...&county=...
 router.get('/search', searchProperty);
 
-// 📌 Change ownership of a property
+// POST /api/property/change-ownership
 router.post('/change-ownership', changeOwnership);
 
-// 📌 Upload building permit document
+// POST /api/property/upload-permit
 router.post('/upload-permit', uploadPermit);
 
-// 📌 Generate QR code for a registered property
+// GET /api/property/generate-qr/:id
 router.get('/generate-qr/:id', generateQrCode);
 
-// 📌 Register a new tenant for a property
+// POST /api/property/register-tenant
 router.post('/register-tenant', registerTenant);
 
-// 📌 Upload lease agreement document
-router.post('/upload-lease', uploadLeaseAgreement);
+// ✅ ✅ POST /api/property/upload-lease — FIXED with multer middleware
+router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreement);
 
-// 📌 Get all registered properties
+// GET /api/property
 router.get('/', getAllProperties);
 
-// 📌 Get property details by ID
+// GET /api/property/:id
 router.get('/:id', getPropertyById);
 
 module.exports = router;
