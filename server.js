@@ -17,7 +17,19 @@ connectDB();
 const app = express();
 
 // ✅ Accept JSON and form fields (not files) in POST
-app.use(cors({ origin: '*', credentials: true }));
+const allowedOrigins = ['https://funny-tiramisu-d00b04.netlify.app'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('public/uploads'));
