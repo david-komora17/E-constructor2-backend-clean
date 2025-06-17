@@ -1,23 +1,27 @@
-// backend/routes/propertyRoutes.js
-const multer = require('multer');
 const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 const controller = require('../controllers/propertyController');
 
-// === ✅ Configure multer ===
-// Use diskStorage to store files in /uploads directory
+// === ✅ Ensure uploads directory exists ===
+const uploadDir = path.join(__dirname, '../../public/uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// === ✅ Configure multer to store in disk ===
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/');
- // You must create this folder or ensure it's writable
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    // Save with original name + timestamp
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const filename = uniqueSuffix + '-' + file.originalname;
-    cb(null, filename);
+    cb(null, `${uniqueSuffix}-${file.originalname}`);
   }
 });
+
 const upload = multer({ storage });
 
 // === ✅ Import controller functions ===
@@ -64,7 +68,7 @@ router.get('/search', searchProperty);
 router.post('/change-ownership', changeOwnership);
 
 // POST /api/property/upload-permit
-router.post('/upload-permit', uploadPermit);
+router.post('/upload-permit', upload.single('permitCertificate'), uploadPermit);
 
 // GET /api/property/generate-qr/:id
 router.get('/generate-qr/:id', generateQrCode);
@@ -72,7 +76,7 @@ router.get('/generate-qr/:id', generateQrCode);
 // POST /api/property/register-tenant
 router.post('/register-tenant', registerTenant);
 
-// ✅ ✅ POST /api/property/upload-lease — FIXED with multer middleware
+// ✅ POST /api/property/upload-lease
 router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreement);
 
 // GET /api/property
