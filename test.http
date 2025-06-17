@@ -1,9 +1,9 @@
-POST http://localhost:11001/api/users/register
+POST https://e-constructor2-backend-clean.onrender.com/api/send-sms
 Content-Type: application/json
 
 {
-  "name": "Jane Doe",
-  "email": "jane@example.com",
-  "password": "securepassword"
+  "phone": "+254712345678",
+  "message": "Dear tenant, your lease has been uploaded. Review here: https://yourdomain.com/lease-review"
 }
+
 

@@ -10,15 +10,17 @@ const sms = at.SMS;
 
 // ✅ Controller: Send general SMS
 exports.sendSMS = async (req, res) => {
-  const { to, message } = req.body;
+  const { to, phone, message } = req.body;
 
-  if (!to || !message) {
+  const recipient = to || phone;
+
+  if (!recipient || !message) {
     return res.status(400).json({ success: false, error: "Missing 'to' or 'message'" });
   }
 
   try {
     const response = await sms.send({
-      to: Array.isArray(to) ? to : [to],
+      to: Array.isArray(recipient) ? recipient : [recipient],
       message,
     });
 
