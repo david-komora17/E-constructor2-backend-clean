@@ -11,29 +11,35 @@ const sms = at.SMS;
 // ✅ Controller: Send general SMS
 exports.sendSMS = async (req, res) => {
   const { to, phone, message } = req.body;
-
   const recipient = to || phone;
 
   if (!recipient || !message) {
     return res.status(400).json({ success: false, error: "Missing 'to' or 'message'" });
   }
 
+  // MOCK SMS: immediately return success if flag set
+  if (process.env.MOCK_SMS === 'true') {
+    console.log(`📲 [MOCK SMS] To: ${recipient}, Message: ${message}`);
+    return res.status(200).json({
+      success: true,
+      message: "SMS sent (mocked)",
+      data: { to: [recipient], message }
+    });
+  }
+
+  // …otherwise do the real send…
   try {
     const response = await sms.send({
       to: Array.isArray(recipient) ? recipient : [recipient],
       message,
     });
-
-    res.status(200).json({
-      success: true,
-      message: "SMS sent successfully",
-      data: response,
-    });
+    return res.status(200).json({ success: true, message: "SMS sent successfully", data: response });
   } catch (err) {
     console.error("❌ Africa's Talking SMS Error:", err);
-    res.status(500).json({ success: false, error: "Failed to send SMS", details: err.message });
+    return res.status(500).json({ success: false, error: "Failed to send SMS", details: err.message });
   }
 };
+
 
 // ✅ Controller: Send lease link via SMS
 exports.sendLeaseLinkSMS = async (req, res) => {
