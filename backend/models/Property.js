@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const PropertySchema = new mongoose.Schema({
@@ -10,13 +9,10 @@ const PropertySchema = new mongoose.Schema({
   purpose: String,
   paybill: String,
   documents: [String],
+  qrCode: { type: String },
 
-  qrCode: {
-  type: String
-}
+  // ✅ Add this field to fix uploadLeaseAgreement
+  leasingAgreement: { type: String, default: "" }
 });
 
 module.exports = mongoose.model('Property', PropertySchema);
-
-// backend/models/Property.js
-

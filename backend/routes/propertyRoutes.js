@@ -8,7 +8,8 @@ const controller = require('../controllers/propertyController');
 // Use diskStorage to store files in /uploads directory
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // You must create this folder or ensure it's writable
+    cb(null, 'public/uploads/');
+ // You must create this folder or ensure it's writable
   },
   filename: function (req, file, cb) {
     // Save with original name + timestamp
