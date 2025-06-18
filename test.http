@@ -2,9 +2,6 @@ POST https://E-constructor2-backend-clean.onrender.com/api/sms
 Content-Type: application/json
 
 {
-  "to": "+2547XXXXXXXX",
+  "to": "+254712345678",
   "message": "Test message from mock"
 }
-
-
-
