@@ -138,21 +138,19 @@ const uploadLeaseAgreement = async (req, res) => {
       return res.status(400).json({ message: "Missing property ID or lease agreement file" });
     }
 
-    const updated = await Property.findByIdAndUpdate(
-      propertyId,
-      { leasingAgreement: req.file.filename },
-      { new: true }
-    );
+    const [postalAddress, lrNumber] = propertyId.split("|");
+    const property = await Property.findOne({ postalAddress, lrNumber });
+    if (!property) return res.status(404).json({ message: "Property not found" });
 
-    if (!updated) {
-      return res.status(404).json({ message: "Property not found" });
-    }
+    property.leasingAgreement = req.file.filename;
+    await property.save();
 
-    res.status(200).json({ message: "Lease agreement uploaded", property: updated });
+    res.status(200).json({ message: "Lease agreement uploaded", property });
   } catch (err) {
     res.status(500).json({ message: "Error uploading lease", error: err.message });
   }
 };
+
 
 // ✅ Get All Properties
 const getAllProperties = async (req, res) => {
