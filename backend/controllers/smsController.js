@@ -8,7 +8,7 @@ const at = africastalking({
 
 const sms = at.SMS;
 
-// ✅ Controller: Send general SMS
+// ✅ Send general SMS
 exports.sendSMS = async (req, res) => {
   const { to, phone, message } = req.body;
   const recipient = to || phone;
@@ -17,7 +17,7 @@ exports.sendSMS = async (req, res) => {
     return res.status(400).json({ success: false, error: "Missing 'to' or 'message'" });
   }
 
-  // MOCK SMS: immediately return success if flag set
+  // ✅ MOCK mode: just log and return
   if (process.env.MOCK_SMS === 'true') {
     console.log(`📲 [MOCK SMS] To: ${recipient}, Message: ${message}`);
     return res.status(200).json({
@@ -27,18 +27,22 @@ exports.sendSMS = async (req, res) => {
     });
   }
 
-  // …otherwise do the real send…
-  try {
-    // Add just before sms.send()
-    const cleanedPhone = to.replace(/\s+/g, "").replace(/^0/, "+254").replace(/^254/, "+254");
-    if (!/^\+254\d{8}$/.test(cleanedPhone)) {
-      return res.status(400).json({ success: false, error: "Invalid phone number format" });
-    }
+  // ✅ Clean and validate phone
+  const cleanedPhone = recipient
+    .replace(/\s+/g, "")
+    .replace(/^0/, "+254")
+    .replace(/^254/, "+254");
 
+  if (!/^\+254\d{9}$/.test(cleanedPhone)) {
+    return res.status(400).json({ success: false, error: "Invalid phone number format" });
+  }
+
+  try {
     const response = await sms.send({
-      to: Array.isArray(recipient) ? recipient : [recipient],
+      to: [cleanedPhone],
       message,
     });
+
     return res.status(200).json({ success: true, message: "SMS sent successfully", data: response });
   } catch (err) {
     console.error("❌ Africa's Talking SMS Error:", err);
@@ -46,8 +50,7 @@ exports.sendSMS = async (req, res) => {
   }
 };
 
-
-// ✅ Controller: Send lease link via SMS
+// ✅ Send lease link via SMS
 exports.sendLeaseLinkSMS = async (req, res) => {
   const { tenantPhone, leaseUrl } = req.body;
 
@@ -72,7 +75,7 @@ exports.sendLeaseLinkSMS = async (req, res) => {
   }
 };
 
-// ✅ Controller: Send lease link via Email (optional fallback)
+// ✅ Email fallback for lease link
 exports.sendLeaseLinkEmail = async (req, res) => {
   const { phone, leaseUrl } = req.body;
 
@@ -91,7 +94,7 @@ exports.sendLeaseLinkEmail = async (req, res) => {
 
     await mailer.sendMail({
       from: process.env.ALERT_EMAIL,
-      to: `${phone}@sms.gateway.com`, // NOTE: Replace with real SMS email gateway
+      to: `${phone}@sms.gateway.com`,
       subject: "Lease Agreement Review",
       text: `Please review your lease: ${leaseUrl}`,
     });

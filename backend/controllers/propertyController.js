@@ -152,6 +152,7 @@ const uploadLeaseAgreement = async (req, res) => {
 };
 
 
+
 // ✅ Get All Properties
 const getAllProperties = async (req, res) => {
   try {
@@ -192,7 +193,6 @@ const searchProperty = async (req, res) => {
     res.status(500).json({ message: "Search failed", error: err.message });
   }
 };
-
 
 // ✅ Export all
 module.exports = {
