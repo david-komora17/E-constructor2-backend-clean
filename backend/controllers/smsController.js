@@ -31,7 +31,7 @@ exports.sendSMS = async (req, res) => {
   try {
     // Add just before sms.send()
     const cleanedPhone = to.replace(/\s+/g, "").replace(/^0/, "+254").replace(/^254/, "+254");
-    if (!/^\+2547\d{8}$/.test(cleanedPhone)) {
+    if (!/^\+254\d{8}$/.test(cleanedPhone)) {
       return res.status(400).json({ success: false, error: "Invalid phone number format" });
     }
 
