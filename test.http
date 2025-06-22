@@ -1,7 +1,7 @@
-POST https://E-constructor2-backend-clean.onrender.com/api/sms
-Content-Type: application/json
-
-{
-  "to": "+254712345678",
-  "message": "Test message from mock"
-}
+curl -X POST https://api.africastalking.com/version1/messaging \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -H "apikey: YOUR_AT_API_KEY" \
+  -d "username=YOUR_USERNAME" \
+  -d "to=+2547XXXXXXXX" \
+  -d "message=Hello world from curl" \
+  -d "bulkSMSMode=1"

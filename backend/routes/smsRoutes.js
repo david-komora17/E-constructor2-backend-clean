@@ -6,13 +6,27 @@ const {
   sendLeaseLinkEmail,
 } = require("../controllers/smsController");
 
-// ✅ General SMS sender (Africa's Talking)
+// ================================
+// 🔹 SMS ROUTES FOR E-CONSTRUCTOR
+// ================================
+
+// ✅ Send general-purpose SMS (e.g. custom message)
 router.post("/", sendSMS);
 
-// ✅ Send lease link via SMS (to tenantPhone)
+// ✅ Send lease agreement link to tenant via SMS
 router.post("/send-lease-link", sendLeaseLinkSMS);
 
-// ✅ Send lease link via Email-to-SMS fallback
+// ✅ Fallback: Send lease link using email-to-SMS gateway
 router.post("/send-lease-link-email", sendLeaseLinkEmail);
+
+// ✅ GET /api/sms/test — returns MOCK_SMS mode status
+router.get("/test", (req, res) => {
+  const mockEnabled = process.env.MOCK_SMS === "true";
+  res.json({
+    success: true,
+    mode: mockEnabled ? "MOCK_SMS mode is ON (no real SMS sent)" : "Live SMS mode",
+    timestamp: new Date(),
+  });
+});
 
 module.exports = router;
