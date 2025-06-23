@@ -35,15 +35,10 @@ const {
   getAllProperties,
   getPropertyById,
   searchProperty,
+  submitManagerCredentials, // ✅ NEW controller added here
 } = controller;
 
 // === ✅ Validate handlers ===
-function validateHandler(handler, name) {
-  if (typeof handler !== 'function') {
-    throw new Error(`❌ Missing or invalid controller function: ${name}`);
-  }
-}
-
 [
   ['registerProperty', registerProperty],
   ['changeOwnership', changeOwnership],
@@ -54,7 +49,12 @@ function validateHandler(handler, name) {
   ['getAllProperties', getAllProperties],
   ['getPropertyById', getPropertyById],
   ['searchProperty', searchProperty],
-].forEach(([name, fn]) => validateHandler(fn, name));
+  ['submitManagerCredentials', submitManagerCredentials], // ✅ Validate new handler
+].forEach(([name, fn]) => {
+  if (typeof fn !== 'function') {
+    throw new Error(`❌ Missing or invalid controller function: ${name}`);
+  }
+});
 
 // === ✅ Define Routes ===
 
@@ -78,6 +78,9 @@ router.post('/register-tenant', registerTenant);
 
 // ✅ POST /api/property/upload-lease
 router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreement);
+
+// ✅ POST /api/property/submit-manager — NEW route
+router.post('/submit-manager', upload.single('permit-upload'), submitManagerCredentials);
 
 // GET /api/property
 router.get('/', getAllProperties);
