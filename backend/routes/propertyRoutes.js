@@ -35,7 +35,8 @@ const {
   getPropertyById,
   searchProperty,
   submitManagerCredentials,
-  terminateManager
+  terminateManager,
+  evictTenant // ✅ Add this
 } = controller;
 
 // Validation for missing functions
@@ -50,7 +51,8 @@ const {
   ['getPropertyById', getPropertyById],
   ['searchProperty', searchProperty],
   ['submitManagerCredentials', submitManagerCredentials],
-  ['terminateManager', terminateManager]
+  ['terminateManager', terminateManager],
+  ['evictTenant', evictTenant] // ✅ Validate
 ].forEach(([name, fn]) => {
   if (typeof fn !== 'function') {
     throw new Error(`❌ Missing or invalid controller function: ${name}`);
@@ -65,6 +67,7 @@ router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreeme
 router.post('/submit-manager', upload.single('permit-upload'), submitManagerCredentials);
 router.post('/terminate-manager', terminateManager);
 router.post('/register-tenant', registerTenant);
+router.post('/evict-tenant', evictTenant); // ✅ Add this route
 
 router.get('/', getAllProperties);
 router.get('/search', searchProperty);
