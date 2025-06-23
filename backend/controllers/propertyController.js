@@ -2,12 +2,12 @@ const Property = require('../models/Property');
 const Tenant = require('../models/Tenant');
 const path = require('path');
 const fs = require('fs');
+const QRCode = require('qrcode');
 
 // ✅ Register Property
 const registerProperty = async (req, res) => {
   try {
     const { postalAddress, lrNumber, ownerID, purpose, paybill, floors } = req.body;
-
     if (!postalAddress || !lrNumber || !ownerID || !purpose || !paybill || !floors) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -29,7 +29,6 @@ const registerProperty = async (req, res) => {
     });
 
     const saved = await newProperty.save();
-
     res.status(201).json({
       message: "Property registered successfully",
       propertyId: saved._id
@@ -81,21 +80,26 @@ const uploadPermit = async (req, res) => {
   }
 };
 
-// ✅ Generate QR Code
+// ✅ Generate QR Code Image & URL
 const generateQrCode = async (req, res) => {
   try {
     const { id: propertyId } = req.params;
-    const fakeQrUrl = `https://e-constructor.com/details.html?id=${propertyId}`;
+    const qrText = `https://e-constructor2.netlify.app/details.html?id=${propertyId}`;
+    const filePath = path.join(__dirname, `../public/uploads/qr-${propertyId}.png`);
+
+    await QRCode.toFile(filePath, qrText);
+
+    const qrImageUrl = `https://e-constructor2-backend-clean.onrender.com/uploads/qr-${propertyId}.png`;
 
     const updated = await Property.findByIdAndUpdate(propertyId, {
-      qrCodeUrl: fakeQrUrl
+      qrCodeUrl: qrImageUrl
     }, { new: true });
 
     if (!updated) return res.status(404).json({ message: "Property not found" });
 
-    res.status(200).json({ message: "QR Code generated", qrCodeUrl: fakeQrUrl });
+    res.status(200).json({ message: "QR Code generated", qrCodeUrl });
   } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ message: "QR generation failed", error: err.message });
   }
 };
 
@@ -158,7 +162,7 @@ const getPropertyById = async (req, res) => {
   }
 };
 
-// ✅ Search Property
+// ✅ Search Property by Postal + LR
 const searchProperty = async (req, res) => {
   try {
     const { postalAddress, lrNumber } = req.query;
@@ -224,7 +228,6 @@ const evictTenant = async (req, res) => {
       return res.status(400).json({ message: "Missing required eviction details" });
     }
 
-    // Placeholder: log details (replace with real eviction logic if needed)
     console.log(`🚨 Eviction Request:
     Tenant: ${tenantId}
     Address: ${address}
@@ -233,8 +236,6 @@ const evictTenant = async (req, res) => {
     JSC ID: ${jscId}
     Due Date: ${dueDate}`);
 
-    // Optionally, save this eviction notice to DB
-
     res.status(200).json({ message: "Eviction request received." });
   } catch (err) {
     console.error("❌ Eviction error:", err.message);
@@ -242,8 +243,7 @@ const evictTenant = async (req, res) => {
   }
 };
 
-
-// Export all
+// ✅ Export all
 module.exports = {
   registerProperty,
   changeOwnership,
