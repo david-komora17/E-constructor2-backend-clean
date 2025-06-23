@@ -3,12 +3,12 @@
 require('dotenv').config();
 
 /**
- * Simulated M-Pesa STK Push — NO real Daraja call
+ * Simulated M-Pesa STK Push — for registration or rent
  * Endpoint: POST /api/mpesa/stkpush
  */
 const initiatePayment = async (req, res) => {
   try {
-    const { phone, amount } = req.body;
+    const { phone, amount, purpose = 'general' } = req.body;
 
     if (!phone || !amount) {
       return res.status(400).json({
@@ -16,14 +16,14 @@ const initiatePayment = async (req, res) => {
       });
     }
 
-    console.log(`📲 Simulated M-Pesa payment: KES ${amount} from ${phone}`);
+    console.log(`📲 Simulated M-Pesa STK push: KES ${amount} from ${phone} for ${purpose}`);
 
     const mockResponse = {
       MerchantRequestID: 'Mock12345',
       CheckoutRequestID: 'MockCheckout12345',
       ResponseCode: '0',
       ResponseDescription: 'Success. Request accepted for processing',
-      CustomerMessage: 'Simulated STK push sent successfully',
+      CustomerMessage: `Simulated STK push sent successfully for ${purpose}`,
     };
 
     return res.status(200).json(mockResponse);
@@ -51,11 +51,11 @@ const freezeAccount = async (req, res) => {
       });
     }
 
-    console.log(`🚫 Freezing account for landlord ${landlordId}. Reason: ${reason}`);
+    console.log(`🚫 Simulated: Freezing M-Pesa account for landlord ${landlordId}. Reason: ${reason}`);
 
     return res.status(200).json({
       success: true,
-      message: `Account for landlord ${landlordId} frozen successfully`,
+      message: `Simulated: Account for landlord ${landlordId} frozen successfully`,
     });
   } catch (error) {
     console.error('❌ Freeze Account Error:', error.message);

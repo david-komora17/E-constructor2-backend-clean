@@ -8,13 +8,13 @@ const {
 } = require('../controllers/mpesaController');
 const { getMpesaStatement } = require('../utils/mpesaUtils');
 
-// 🔒 Freeze landlord M-Pesa account
+// 🔒 Simulate freezing a landlord’s M-Pesa account
 router.post('/freeze', freezeAccount);
 
-// 💸 Simulate M-Pesa STK Push payment
+// 💸 Simulate M-Pesa STK Push (e.g. for registration, rent)
 router.post('/stkpush', initiatePayment);
 
-// 📄 Request M-Pesa statement
+// 📄 Simulate request for M-Pesa statement
 router.post('/request-mpesa-statement', async (req, res) => {
   const { phoneNumber } = req.body;
 
@@ -33,7 +33,7 @@ router.post('/request-mpesa-statement', async (req, res) => {
       data: statement,
     });
   } catch (error) {
-    console.error('❌ Statement Fetch Error:', error);
+    console.error('❌ Statement Fetch Error:', error.message || error);
     return res.status(500).json({
       success: false,
       error: 'Could not fetch M-Pesa statement.',

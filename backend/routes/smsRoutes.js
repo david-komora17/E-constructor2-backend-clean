@@ -1,3 +1,5 @@
+// backend/routes/smsRoutes.js
+
 const express = require("express");
 const router = express.Router();
 const {
@@ -10,16 +12,16 @@ const {
 // 🔹 SMS ROUTES FOR E-CONSTRUCTOR
 // ================================
 
-// ✅ Send general-purpose SMS (e.g. custom message)
+// ✅ Send general-purpose SMS (e.g. system alerts or custom text)
 router.post("/", sendSMS);
 
 // ✅ Send lease agreement link to tenant via SMS
 router.post("/send-lease-link", sendLeaseLinkSMS);
 
-// ✅ Fallback: Send lease link using email-to-SMS gateway
+// ✅ Fallback: Send lease agreement via email-to-SMS (if SMS fails)
 router.post("/send-lease-link-email", sendLeaseLinkEmail);
 
-// ✅ GET /api/sms/test — returns MOCK_SMS mode status
+// ✅ Test route — shows if MOCK_SMS mode is active
 router.get("/test", (req, res) => {
   const mockEnabled = process.env.MOCK_SMS === "true";
   res.json({
