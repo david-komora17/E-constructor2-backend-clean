@@ -36,6 +36,7 @@ const {
   getPropertyById,
   searchProperty,
   submitManagerCredentials, // ✅ NEW controller added here
+  terminateManager,
 } = controller;
 
 // === ✅ Validate handlers ===
@@ -49,6 +50,7 @@ const {
   ['getAllProperties', getAllProperties],
   ['getPropertyById', getPropertyById],
   ['searchProperty', searchProperty],
+  ['terminateManager', terminateManager], // ✅ Add this to the validation list
   ['submitManagerCredentials', submitManagerCredentials], // ✅ Validate new handler
 ].forEach(([name, fn]) => {
   if (typeof fn !== 'function') {
@@ -81,6 +83,9 @@ router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreeme
 
 // ✅ POST /api/property/submit-manager — NEW route
 router.post('/submit-manager', upload.single('permit-upload'), submitManagerCredentials);
+
+// ✅ POST /api/property/terminate-manager — NEW route
+router.post('/terminate-manager', controller.terminateManager);
 
 // GET /api/property
 router.get('/', getAllProperties);
