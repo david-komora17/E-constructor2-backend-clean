@@ -215,6 +215,34 @@ const submitManagerCredentials = async (req, res) => {
   }
 };
 
+// ✅ Evict Tenant Handler
+const evictTenant = async (req, res) => {
+  try {
+    const { tenantId, address, charges, magistrate, jscId, dueDate } = req.body;
+
+    if (!tenantId || !address || !charges || !magistrate || !jscId || !dueDate) {
+      return res.status(400).json({ message: "Missing required eviction details" });
+    }
+
+    // Placeholder: log details (replace with real eviction logic if needed)
+    console.log(`🚨 Eviction Request:
+    Tenant: ${tenantId}
+    Address: ${address}
+    Charges: ${charges}
+    Magistrate: ${magistrate}
+    JSC ID: ${jscId}
+    Due Date: ${dueDate}`);
+
+    // Optionally, save this eviction notice to DB
+
+    res.status(200).json({ message: "Eviction request received." });
+  } catch (err) {
+    console.error("❌ Eviction error:", err.message);
+    res.status(500).json({ message: "Eviction server error", error: err.message });
+  }
+};
+
+
 // Export all
 module.exports = {
   registerProperty,
