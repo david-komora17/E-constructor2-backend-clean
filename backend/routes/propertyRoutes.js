@@ -1,3 +1,4 @@
+// routes/propertyRoutes.js
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
@@ -5,13 +6,13 @@ const path = require('path');
 const router = express.Router();
 const controller = require('../controllers/propertyController');
 
-// Ensure uploads directory exists
+// ✅ Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '../../public/uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Multer setup for storing files on disk
+// ✅ Multer setup for file storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir);
@@ -23,7 +24,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Destructure controller functions
+// ✅ Destructure controller methods
 const {
   registerProperty,
   changeOwnership,
@@ -39,7 +40,7 @@ const {
   evictTenant
 } = controller;
 
-// Validate all expected controller functions exist
+// ✅ Confirm all controller methods exist
 [
   ['registerProperty', registerProperty],
   ['changeOwnership', changeOwnership],
@@ -59,7 +60,7 @@ const {
   }
 });
 
-// POST routes
+// ✅ POST routes
 router.post('/', upload.single('documents'), registerProperty);
 router.post('/change-ownership', changeOwnership);
 router.post('/upload-permit', upload.single('permitCertificate'), uploadPermit);
@@ -67,12 +68,12 @@ router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreeme
 router.post('/submit-manager', upload.single('permit-upload'), submitManagerCredentials);
 router.post('/terminate-manager', terminateManager);
 router.post('/register-tenant', registerTenant);
-router.post('/evict', evictTenant); // ✅ eviction route
+router.post('/evict-tenant', evictTenant); // renamed to match frontend
 
-// GET routes
+// ✅ GET routes
 router.get('/', getAllProperties);
 router.get('/search', searchProperty);
-router.get('/qr/:id', generateQrCode); // ✅ generate QR route
+router.get('/qr/:id', generateQrCode);
 router.get('/:id', getPropertyById);
 
 module.exports = router;
