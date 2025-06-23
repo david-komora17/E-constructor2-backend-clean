@@ -191,6 +191,26 @@ const searchProperty = async (req, res) => {
   }
 };
 
+// ✅ Terminate Manager Handler
+const terminateManager = async (req, res) => {
+  try {
+    const { managerName, licenseNumber, terminationReason } = req.body;
+
+    if (!managerName || !licenseNumber || !terminationReason) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    console.log(`🔴 Terminating manager: ${managerName} (${licenseNumber}) - Reason: ${terminationReason}`);
+    // Future: Add DB logging or verification
+
+    res.status(200).json({ message: "✅ Manager terminated successfully." });
+  } catch (error) {
+    console.error("❌ Error terminating manager:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
 // ✅ NEW: Submit Manager Credentials
 const submitManagerCredentials = async (req, res) => {
   try {
@@ -216,24 +236,7 @@ const submitManagerCredentials = async (req, res) => {
   }
 };
 
-// ✅ Terminate Manager (simple mock logic for now)
-const terminateManager = async (req, res) => {
-  try {
-    const { managerName, licenseNumber, terminationReason } = req.body;
 
-    if (!managerName || !licenseNumber || !terminationReason) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
-
-    // Mock logic (can be expanded later with DB action or audit log)
-    console.log(`📌 Terminating manager: ${managerName} (${licenseNumber}) for reason: ${terminationReason}`);
-
-    res.status(200).json({ message: "✅ Manager terminated successfully" });
-  } catch (err) {
-    console.error("❌ Manager termination error:", err.message);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
 
 
 // ✅ Export all
