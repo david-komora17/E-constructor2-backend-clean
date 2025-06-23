@@ -250,5 +250,6 @@ module.exports = {
   getAllProperties,
   getPropertyById,
   searchProperty,
-  submitManagerCredentials
+  submitManagerCredentials,
+  terminateManager
 };
