@@ -216,6 +216,26 @@ const submitManagerCredentials = async (req, res) => {
   }
 };
 
+// ✅ Terminate Manager (simple mock logic for now)
+const terminateManager = async (req, res) => {
+  try {
+    const { managerName, licenseNumber, terminationReason } = req.body;
+
+    if (!managerName || !licenseNumber || !terminationReason) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Mock logic (can be expanded later with DB action or audit log)
+    console.log(`📌 Terminating manager: ${managerName} (${licenseNumber}) for reason: ${terminationReason}`);
+
+    res.status(200).json({ message: "✅ Manager terminated successfully" });
+  } catch (err) {
+    console.error("❌ Manager termination error:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+
 // ✅ Export all
 module.exports = {
   registerProperty,
