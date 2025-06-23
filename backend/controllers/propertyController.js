@@ -1,5 +1,5 @@
 const Property = require('../models/Property');
-const Tenant = require('../models/Tenant'); // Add if tenant logic exists
+const Tenant = require('../models/Tenant');
 const path = require('path');
 const fs = require('fs');
 
@@ -43,7 +43,6 @@ const registerProperty = async (req, res) => {
 };
 
 // ✅ Change Ownership
-
 const changeOwnership = async (req, res) => {
   const { propertyId, newOwnerID } = req.body;
 
@@ -151,8 +150,6 @@ const uploadLeaseAgreement = async (req, res) => {
   }
 };
 
-
-
 // ✅ Get All Properties
 const getAllProperties = async (req, res) => {
   try {
@@ -174,7 +171,7 @@ const getPropertyById = async (req, res) => {
   }
 };
 
-// ✅ Search Property by LR number + Postal Address (for ownership transfer)
+// ✅ Search Property
 const searchProperty = async (req, res) => {
   try {
     const { postalAddress, lrNumber } = req.query;
@@ -194,6 +191,31 @@ const searchProperty = async (req, res) => {
   }
 };
 
+// ✅ NEW: Submit Manager Credentials
+const submitManagerCredentials = async (req, res) => {
+  try {
+    const { 'manager-name': managerName, 'manager-id': managerId, 'lr-number': lrNumber } = req.body;
+    const permitFile = req.file?.filename;
+
+    if (!managerName || !managerId || !lrNumber || !permitFile) {
+      return res.status(400).json({ message: "❌ All fields are required." });
+    }
+
+    console.log("✅ Manager submitted:", {
+      managerName,
+      managerId,
+      lrNumber,
+      permitFile
+    });
+
+    // Save to DB if necessary (not implemented here)
+    res.status(200).json({ message: "✅ Manager credentials submitted successfully." });
+  } catch (error) {
+    console.error("❌ Manager credential submission error:", error);
+    res.status(500).json({ message: "❌ Server error", error: error.message });
+  }
+};
+
 // ✅ Export all
 module.exports = {
   registerProperty,
@@ -204,5 +226,6 @@ module.exports = {
   uploadLeaseAgreement,
   getAllProperties,
   getPropertyById,
-  searchProperty
+  searchProperty,
+  submitManagerCredentials
 };
