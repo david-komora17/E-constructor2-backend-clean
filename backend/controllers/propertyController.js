@@ -3,10 +3,9 @@ const Tenant = require('../models/Tenant');
 const path = require('path');
 const fs = require('fs');
 
-// ✅ Register Property — with file upload
+// ✅ Register Property
 const registerProperty = async (req, res) => {
   try {
-    console.log("📩 Incoming property registration request");
     const { postalAddress, lrNumber, ownerID, purpose, paybill, floors } = req.body;
 
     if (!postalAddress || !lrNumber || !ownerID || !purpose || !paybill || !floors) {
@@ -35,17 +34,15 @@ const registerProperty = async (req, res) => {
       message: "Property registered successfully",
       propertyId: saved._id
     });
-
-  } catch (error) {
-    console.error("❌ Property registration error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+  } catch (err) {
+    console.error("❌ Property registration error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
 // ✅ Change Ownership
 const changeOwnership = async (req, res) => {
   const { propertyId, newOwnerID } = req.body;
-
   if (!propertyId || !newOwnerID) {
     return res.status(400).json({ message: "Missing property ID or new owner ID" });
   }
@@ -56,22 +53,14 @@ const changeOwnership = async (req, res) => {
       { ownerName: newOwnerID },
       { new: true }
     );
-
-    if (!updated) {
-      return res.status(404).json({ message: "Property not found" });
-    }
-
-    res.status(200).json({
-      message: "Ownership updated successfully",
-      updatedProperty: updated,
-    });
+    if (!updated) return res.status(404).json({ message: "Property not found" });
+    res.status(200).json({ message: "Ownership updated", updatedProperty: updated });
   } catch (err) {
-    console.error("Ownership update error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// ✅ Upload Permit Certificate
+// ✅ Upload Permit
 const uploadPermit = async (req, res) => {
   try {
     const { propertyId } = req.body;
@@ -84,30 +73,29 @@ const uploadPermit = async (req, res) => {
       { permitCertificate: req.file.filename },
       { new: true }
     );
+    if (!updated) return res.status(404).json({ message: "Property not found" });
 
-    if (!updated) {
-      return res.status(404).json({ message: "Property not found" });
-    }
-
-    res.status(200).json({ message: "Permit uploaded successfully", property: updated });
+    res.status(200).json({ message: "Permit uploaded", property: updated });
   } catch (err) {
-    console.error("❌ Permit upload error:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// ✅ Generate QR Code (placeholder URL for now)
+// ✅ Generate QR Code
 const generateQrCode = async (req, res) => {
   try {
-    const { propertyId } = req.body;
-    if (!propertyId) return res.status(400).json({ message: "Missing property ID" });
-
+    const { id: propertyId } = req.params;
     const fakeQrUrl = `https://e-constructor.com/details.html?id=${propertyId}`;
-    const updated = await Property.findByIdAndUpdate(propertyId, { qrCodeUrl: fakeQrUrl }, { new: true });
+
+    const updated = await Property.findByIdAndUpdate(propertyId, {
+      qrCodeUrl: fakeQrUrl
+    }, { new: true });
+
+    if (!updated) return res.status(404).json({ message: "Property not found" });
 
     res.status(200).json({ message: "QR Code generated", qrCodeUrl: fakeQrUrl });
   } catch (err) {
-    res.status(500).json({ message: "Error generating QR code", error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
@@ -115,9 +103,8 @@ const generateQrCode = async (req, res) => {
 const registerTenant = async (req, res) => {
   try {
     const { name, phone, propertyId } = req.body;
-
     if (!name || !phone || !propertyId) {
-      return res.status(400).json({ message: "Missing tenant name, phone, or propertyId" });
+      return res.status(400).json({ message: "Missing fields" });
     }
 
     const tenant = new Tenant({ name, phone, propertyId });
@@ -125,7 +112,7 @@ const registerTenant = async (req, res) => {
 
     res.status(201).json({ message: "Tenant registered", tenant: saved });
   } catch (err) {
-    res.status(500).json({ message: "Error registering tenant", error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
@@ -134,7 +121,7 @@ const uploadLeaseAgreement = async (req, res) => {
   try {
     const { propertyId } = req.body;
     if (!propertyId || !req.file) {
-      return res.status(400).json({ message: "Missing property ID or lease agreement file" });
+      return res.status(400).json({ message: "Missing property ID or lease file" });
     }
 
     const [postalAddress, lrNumber] = propertyId.split("|");
@@ -144,9 +131,9 @@ const uploadLeaseAgreement = async (req, res) => {
     property.leasingAgreement = req.file.filename;
     await property.save();
 
-    res.status(200).json({ message: "Lease agreement uploaded", property });
+    res.status(200).json({ message: "Lease uploaded", property });
   } catch (err) {
-    res.status(500).json({ message: "Error uploading lease", error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
@@ -156,7 +143,7 @@ const getAllProperties = async (req, res) => {
     const properties = await Property.find();
     res.status(200).json({ properties });
   } catch (err) {
-    res.status(500).json({ message: "Error fetching properties", error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
@@ -167,7 +154,7 @@ const getPropertyById = async (req, res) => {
     if (!property) return res.status(404).json({ message: "Property not found" });
     res.status(200).json(property);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching property", error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
@@ -175,9 +162,8 @@ const getPropertyById = async (req, res) => {
 const searchProperty = async (req, res) => {
   try {
     const { postalAddress, lrNumber } = req.query;
-
     if (!postalAddress || !lrNumber) {
-      return res.status(400).json({ message: "Missing postal address or LR number" });
+      return res.status(400).json({ message: "Missing search parameters" });
     }
 
     const property = await Property.findOne({ postalAddress, lrNumber });
@@ -187,38 +173,33 @@ const searchProperty = async (req, res) => {
 
     res.status(200).json({ propertyId: property._id });
   } catch (err) {
-    res.status(500).json({ message: "Search failed", error: err.message });
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-// ✅ Terminate Manager Handler
+// ✅ Terminate Manager
 const terminateManager = async (req, res) => {
   try {
     const { managerName, licenseNumber, terminationReason } = req.body;
-
     if (!managerName || !licenseNumber || !terminationReason) {
-      return res.status(400).json({ message: "Missing required fields" });
+      return res.status(400).json({ message: "Missing fields" });
     }
 
-    console.log(`🔴 Terminating manager: ${managerName} (${licenseNumber}) - Reason: ${terminationReason}`);
-    // Future: Add DB logging or verification
-
-    res.status(200).json({ message: "✅ Manager terminated successfully." });
-  } catch (error) {
-    console.error("❌ Error terminating manager:", error.message);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.log(`🔴 Termination requested for: ${managerName} (${licenseNumber}) - Reason: ${terminationReason}`);
+    res.status(200).json({ message: "Manager termination submitted" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-
-// ✅ NEW: Submit Manager Credentials
+// ✅ Submit Manager Credentials
 const submitManagerCredentials = async (req, res) => {
   try {
     const { 'manager-name': managerName, 'manager-id': managerId, 'lr-number': lrNumber } = req.body;
     const permitFile = req.file?.filename;
 
     if (!managerName || !managerId || !lrNumber || !permitFile) {
-      return res.status(400).json({ message: "❌ All fields are required." });
+      return res.status(400).json({ message: "Missing fields" });
     }
 
     console.log("✅ Manager submitted:", {
@@ -228,18 +209,13 @@ const submitManagerCredentials = async (req, res) => {
       permitFile
     });
 
-    // Save to DB if necessary (not implemented here)
-    res.status(200).json({ message: "✅ Manager credentials submitted successfully." });
-  } catch (error) {
-    console.error("❌ Manager credential submission error:", error);
-    res.status(500).json({ message: "❌ Server error", error: error.message });
+    res.status(200).json({ message: "Manager credentials submitted" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-
-
-
-// ✅ Export all
+// Export all
 module.exports = {
   registerProperty,
   changeOwnership,

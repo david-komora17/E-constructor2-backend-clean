@@ -5,26 +5,25 @@ const path = require('path');
 const router = express.Router();
 const controller = require('../controllers/propertyController');
 
-// === ✅ Ensure uploads directory exists ===
+// Ensure uploads directory exists
 const uploadDir = path.join(__dirname, '../../public/uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// === ✅ Configure multer to store in disk ===
+// Multer setup for storing files on disk
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     cb(null, `${uniqueSuffix}-${file.originalname}`);
   }
 });
-
 const upload = multer({ storage });
 
-// === ✅ Import controller functions ===
+// Destructure controller functions
 const {
   registerProperty,
   changeOwnership,
@@ -35,11 +34,11 @@ const {
   getAllProperties,
   getPropertyById,
   searchProperty,
-  submitManagerCredentials, // ✅ NEW controller added here
-  terminateManager,
+  submitManagerCredentials,
+  terminateManager
 } = controller;
 
-// === ✅ Validate handlers ===
+// Validation for missing functions
 [
   ['registerProperty', registerProperty],
   ['changeOwnership', changeOwnership],
@@ -50,47 +49,26 @@ const {
   ['getAllProperties', getAllProperties],
   ['getPropertyById', getPropertyById],
   ['searchProperty', searchProperty],
-  ['terminateManager', terminateManager], // ✅ Add this to the validation list
-  ['submitManagerCredentials', submitManagerCredentials], // ✅ Validate new handler
+  ['submitManagerCredentials', submitManagerCredentials],
+  ['terminateManager', terminateManager]
 ].forEach(([name, fn]) => {
   if (typeof fn !== 'function') {
     throw new Error(`❌ Missing or invalid controller function: ${name}`);
   }
 });
 
-// === ✅ Define Routes ===
-
-// POST /api/property — Register property
+// Routes
 router.post('/', upload.single('documents'), registerProperty);
-
-// GET /api/property/search?lrNumber=...&county=...
-router.get('/search', searchProperty);
-
-// POST /api/property/change-ownership
 router.post('/change-ownership', changeOwnership);
-
-// POST /api/property/upload-permit
 router.post('/upload-permit', upload.single('permitCertificate'), uploadPermit);
-
-// GET /api/property/generate-qr/:id
-router.get('/generate-qr/:id', generateQrCode);
-
-// POST /api/property/register-tenant
+router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreement);
+router.post('/submit-manager', upload.single('permit-upload'), submitManagerCredentials);
+router.post('/terminate-manager', terminateManager);
 router.post('/register-tenant', registerTenant);
 
-// ✅ POST /api/property/upload-lease
-router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreement);
-
-// ✅ POST /api/property/submit-manager — NEW route
-router.post('/submit-manager', upload.single('permit-upload'), submitManagerCredentials);
-
-// ✅ POST /api/property/terminate-manager — NEW route
-router.post('/terminate-manager', controller.terminateManager);
-
-// GET /api/property
 router.get('/', getAllProperties);
-
-// GET /api/property/:id
+router.get('/search', searchProperty);
+router.get('/generate-qr/:id', generateQrCode);
 router.get('/:id', getPropertyById);
 
 module.exports = router;
