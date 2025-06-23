@@ -36,10 +36,10 @@ const {
   searchProperty,
   submitManagerCredentials,
   terminateManager,
-  evictTenant // ✅ Add this
+  evictTenant
 } = controller;
 
-// Validation for missing functions
+// Validate all expected controller functions exist
 [
   ['registerProperty', registerProperty],
   ['changeOwnership', changeOwnership],
@@ -52,14 +52,14 @@ const {
   ['searchProperty', searchProperty],
   ['submitManagerCredentials', submitManagerCredentials],
   ['terminateManager', terminateManager],
-  ['evictTenant', evictTenant] // ✅ Validate
+  ['evictTenant', evictTenant]
 ].forEach(([name, fn]) => {
   if (typeof fn !== 'function') {
     throw new Error(`❌ Missing or invalid controller function: ${name}`);
   }
 });
 
-// Routes
+// POST routes
 router.post('/', upload.single('documents'), registerProperty);
 router.post('/change-ownership', changeOwnership);
 router.post('/upload-permit', upload.single('permitCertificate'), uploadPermit);
@@ -67,11 +67,12 @@ router.post('/upload-lease', upload.single('leaseAgreement'), uploadLeaseAgreeme
 router.post('/submit-manager', upload.single('permit-upload'), submitManagerCredentials);
 router.post('/terminate-manager', terminateManager);
 router.post('/register-tenant', registerTenant);
-router.post('/evict-tenant', evictTenant); // ✅ Add this route
+router.post('/evict', evictTenant); // ✅ eviction route
 
+// GET routes
 router.get('/', getAllProperties);
 router.get('/search', searchProperty);
-router.get('/generate-qr/:id', generateQrCode);
+router.get('/qr/:id', generateQrCode); // ✅ generate QR route
 router.get('/:id', getPropertyById);
 
 module.exports = router;
