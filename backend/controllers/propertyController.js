@@ -255,5 +255,6 @@ module.exports = {
   getPropertyById,
   searchProperty,
   submitManagerCredentials,
-  terminateManager
+  terminateManager,
+  evictTenant
 };
