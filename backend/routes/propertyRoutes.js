@@ -71,11 +71,12 @@ router.post('/register-tenant', registerTenant);
 router.post('/evict-tenant', evictTenant); // renamed to match frontend
 
 // ✅ GET routes
+// ✅ GET routes
 router.get('/', getAllProperties);
 router.get('/search', searchProperty);
 router.get('/qr/:id', generateQrCode);
+router.get('/freeze-estimate/:buildingId', controller.getFreezeEstimate); // ✅ Move above :id
 router.get('/:id', getPropertyById);
-router.get('/freeze-estimate/:buildingId', controller.getFreezeEstimate);
 
 
 module.exports = router;
