@@ -56,6 +56,11 @@ const tenantSchema = new mongoose.Schema({
     default: 0,
   },
 
+  depositAmount: {
+  type: Number,
+  default: 0,
+},
+
   serviceCharges: {
     type: String,
     default: '',

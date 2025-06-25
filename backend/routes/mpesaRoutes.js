@@ -6,15 +6,22 @@ const {
   freezeAccount,
   initiatePayment
 } = require('../controllers/mpesaController');
+
 const { getMpesaStatement } = require('../utils/mpesaUtils');
 
-// 🔒 Simulate freezing a landlord’s M-Pesa account
-router.post('/freeze', freezeAccount);
+// ================================
+// 🔐 Freeze Landlord M-Pesa Account
+// ================================
+router.post('/freeze-account', freezeAccount); // renamed for clarity
 
-// 💸 Simulate M-Pesa STK Push (e.g. for registration, rent)
-router.post('/stkpush', initiatePayment);
+// ================================
+// 💰 Simulate M-Pesa STK Push
+// ================================
+router.post('/stkpush', initiatePayment); // for rent payments or registration
 
-// 📄 Simulate request for M-Pesa statement
+// ================================
+// 📄 Simulated M-Pesa Statement Request
+// ================================
 router.post('/request-mpesa-statement', async (req, res) => {
   const { phoneNumber } = req.body;
 
@@ -27,6 +34,7 @@ router.post('/request-mpesa-statement', async (req, res) => {
 
   try {
     const statement = await getMpesaStatement(phoneNumber);
+
     return res.status(200).json({
       success: true,
       message: `Statement sent to ${phoneNumber}`,
