@@ -17,7 +17,10 @@ connectDB();
 const app = express();
 
 // ✅ Accept JSON and form fields (not files) in POST
-const allowedOrigins = ['https://funny-tiramisu-d00b04.netlify.app'];
+const allowedOrigins = [
+  'https://funny-tiramisu-d00b04.netlify.app',
+  'https://e-constructor.netlify.app'
+];
 
 app.use(cors({
   origin: function (origin, callback) {
