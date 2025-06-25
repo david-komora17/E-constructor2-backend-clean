@@ -75,5 +75,7 @@ router.get('/', getAllProperties);
 router.get('/search', searchProperty);
 router.get('/qr/:id', generateQrCode);
 router.get('/:id', getPropertyById);
+router.get('/freeze-estimate/:buildingId', controller.getFreezeEstimate);
+
 
 module.exports = router;
