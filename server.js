@@ -46,8 +46,7 @@ app.use('/api/police', notifyPoliceRoutes);
 app.use('/api/sms', smsRoutes);
 app.use('/api/magistrates', magistrateRoutes);
 app.use('/api', courtDocsRoute);
-app.use('/api/report', reportRoutes)
-
+app.use('/api', reportRoutes);
 // ✅ Global error handler
 app.use(errorHandler);
 
