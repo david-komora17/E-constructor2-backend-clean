@@ -1,4 +1,3 @@
-// backend/controllers/reportController.js
 const Property = require('../models/Property');
 
 const submitReport = async (req, res) => {
@@ -10,13 +9,16 @@ const submitReport = async (req, res) => {
       return res.status(400).json({ message: 'Missing fields or photo evidence' });
     }
 
-    const property = await Property.findOne({ lrNumber: buildingId });
+    // 🔧 Normalize LR number before searching
+    const normalizedLR = buildingId.trim();
+
+    const property = await Property.findOne({ lrNumber: normalizedLR });
     if (!property) return res.status(404).json({ message: 'Building not found' });
 
     const landlordId = property.ownerName;
 
     console.log('📸 Report submitted:', {
-      buildingId,
+      buildingId: normalizedLR,
       issueDescription,
       photo: photoFilename,
       landlordId
