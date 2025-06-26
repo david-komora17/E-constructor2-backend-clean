@@ -11,6 +11,7 @@ const notifyPoliceRoutes = require('./backend/routes/notifyPoliceRoutes');
 const smsRoutes = require('./backend/routes/smsRoutes');
 const magistrateRoutes = require('./backend/routes/magistrateRoutes');
 const courtDocsRoute = require('./backend/routes/courtDocsRoute');
+const reportRoutes = require('./backend/routes/reportRoutes');
 
 connectDB();
 
@@ -45,6 +46,7 @@ app.use('/api/police', notifyPoliceRoutes);
 app.use('/api/sms', smsRoutes);
 app.use('/api/magistrates', magistrateRoutes);
 app.use('/api', courtDocsRoute);
+app.use('/api/report', reportRoutes)
 
 // ✅ Global error handler
 app.use(errorHandler);
