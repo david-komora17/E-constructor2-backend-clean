@@ -12,7 +12,9 @@ const submitReport = async (req, res) => {
     // 🔧 Normalize LR number before searching
     const normalizedLR = buildingId.trim();
 
-    const property = await Property.findOne({ lrNumber: normalizedLR });
+    const property = await Property.findOne({
+      lrNumber: { $regex: new RegExp(`^${buildingId.trim()}$`, 'i') }
+});
     if (!property) return res.status(404).json({ message: 'Building not found' });
 
     const landlordId = property.ownerName;
