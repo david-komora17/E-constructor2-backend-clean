@@ -244,31 +244,37 @@ const evictTenant = async (req, res) => {
 };
 
 // ✅ Estimate Freeze Amount
+// ✅ Estimate Freeze Amount
 const getFreezeEstimate = async (req, res) => {
   try {
     const { buildingId } = req.params;
 
-    const tenants = await Tenant.find({ propertyId: buildingId });
-
-    if (!tenants || tenants.length === 0) {
-      return res.status(404).json({ message: "No tenants found for this building" });
+    // Confirm if the property exists first
+    const property = await Property.findById(buildingId);
+    if (!property) {
+      return res.status(404).json({ message: "Property not found" });
     }
 
-    const activeTenants = tenants.length;
-    const rentPerTenant = 12000; // Static value; can be dynamic later
-    const totalToFreeze = activeTenants * rentPerTenant;
+    // Find tenants linked to this property
+    const tenants = await Tenant.find({ propertyId: buildingId });
+
+    const tenantCount = tenants.length;
+    const estimatedAmount = tenantCount * 5000; // Or your logic
 
     res.status(200).json({
-      activeTenants,
-      rentPerTenant,
-      totalToFreeze
+      property: {
+        id: buildingId,
+        lrNumber: property.lrNumber,
+        postalAddress: property.postalAddress
+      },
+      tenantCount,
+      estimatedFreezeAmount: estimatedAmount
     });
   } catch (err) {
-    console.error("❌ Freeze estimate error:", err.message);
+    console.error("❌ Freeze estimate error:", err);
     res.status(500).json({ message: "Freeze estimate failed", error: err.message });
   }
 };
-
 
 // ✅ Export all
 module.exports = {

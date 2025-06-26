@@ -37,7 +37,8 @@ const {
   searchProperty,
   submitManagerCredentials,
   terminateManager,
-  evictTenant
+  evictTenant,
+  getFreezeEstimate // ✅ Added this
 } = controller;
 
 // ✅ Confirm all controller methods exist
@@ -53,7 +54,8 @@ const {
   ['searchProperty', searchProperty],
   ['submitManagerCredentials', submitManagerCredentials],
   ['terminateManager', terminateManager],
-  ['evictTenant', evictTenant]
+  ['evictTenant', evictTenant],
+  ['getFreezeEstimate', getFreezeEstimate] // ✅ Checked
 ].forEach(([name, fn]) => {
   if (typeof fn !== 'function') {
     throw new Error(`❌ Missing or invalid controller function: ${name}`);
@@ -71,12 +73,10 @@ router.post('/register-tenant', registerTenant);
 router.post('/evict-tenant', evictTenant); // renamed to match frontend
 
 // ✅ GET routes
-// ✅ GET routes
 router.get('/', getAllProperties);
 router.get('/search', searchProperty);
 router.get('/qr/:id', generateQrCode);
-router.get('/freeze-estimate/:buildingId', controller.getFreezeEstimate); // ✅ Move above :id
+router.get('/freeze-estimate/:buildingId', getFreezeEstimate); // ✅ Route for freeze estimate
 router.get('/:id', getPropertyById);
-
 
 module.exports = router;
